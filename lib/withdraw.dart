@@ -22,34 +22,71 @@ class WithdrawPageState extends State<WithdrawPage> {
 
   // Placeholder for withdrawing
   void processWithdraw() {
-    // Implement withdraw processing here
-    showDialog(
+    if (_selectedBank == 'Select Bank' ||
+        _accountNumber.isEmpty ||
+        _amount.isEmpty) {
+      showDialog(
         context: context,
         builder: (context) => AlertDialog(
-              title: const Text("Withdraw Failed"),
-              content: const Text("Try again later."),
-              actions: [
-                TextButton(
-                  child: const Text("OK"),
-                  onPressed: () {
-                    Navigator.of(context).pop();
-                    Navigator.of(context).pushReplacementNamed('/');
-                  },
-                )
-              ],
-            ));
+          title: const Text("Invalid Input"),
+          content:
+              const Text("Please fill in all the fields before withdrawing."),
+          actions: [
+            TextButton(
+              child: const Text("OK"),
+              onPressed: () {
+                Navigator.of(context).pop();
+              },
+            )
+          ],
+        ),
+      );
+      return;
+    }
+
+    // Mock processing withdraw
+    showDialog(
+      context: context,
+      builder: (context) => AlertDialog(
+        title: const Text("Withdraw Failed"),
+        content: const Text("Try again later."),
+        actions: [
+          TextButton(
+            child: const Text("OK"),
+            onPressed: () {
+              Navigator.of(context).pop();
+              Navigator.of(context).pushReplacementNamed('/');
+            },
+          ),
+        ],
+      ),
+    );
   }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(title: const Text("Withdraw")),
-      body: Padding(
+      appBar: AppBar(
+        title: const Text("Withdraw Funds"),
+        backgroundColor: Colors.teal,
+      ),
+      body: SingleChildScrollView(
         padding: const EdgeInsets.all(16.0),
         child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            DropdownButton<String>(
+            const Text(
+              "Withdraw Funds",
+              style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold),
+            ),
+            const SizedBox(height: 20),
+            // Bank selection dropdown
+            DropdownButtonFormField<String>(
               value: _selectedBank,
+              decoration: const InputDecoration(
+                labelText: "Select Bank",
+                border: OutlineInputBorder(),
+              ),
               onChanged: (String? newValue) {
                 setState(() {
                   _selectedBank = newValue!;
@@ -63,25 +100,55 @@ class WithdrawPageState extends State<WithdrawPage> {
                 );
               }).toList(),
             ),
+            const SizedBox(height: 20),
+            // Account number input
             TextField(
-              decoration: const InputDecoration(labelText: "Account Number"),
+              decoration: const InputDecoration(
+                labelText: "Account Number",
+                border: OutlineInputBorder(),
+              ),
+              keyboardType: TextInputType.number,
               onChanged: (value) {
                 _accountNumber = value;
-                fetchAccountName(); // Trigger fetching
+                fetchAccountName(); // Trigger fetching account name
               },
             ),
             const SizedBox(height: 20),
-            Text("Account Name: $_accountName",
-                style: const TextStyle(fontSize: 16)),
+            // Account name display
+            Text(
+              "Account Name: $_accountName",
+              style: const TextStyle(
+                fontSize: 18,
+                fontWeight: FontWeight.w600,
+                color: Colors.grey,
+              ),
+            ),
+            const SizedBox(height: 20),
+            // Amount input
             TextField(
-              decoration: const InputDecoration(labelText: "Amount"),
+              decoration: const InputDecoration(
+                labelText: "Amount",
+                border: OutlineInputBorder(),
+              ),
+              keyboardType: TextInputType.number,
               onChanged: (value) {
                 _amount = value;
               },
             ),
-            ElevatedButton(
+            const SizedBox(height: 40),
+            // Withdraw button
+            ElevatedButton.icon(
               onPressed: processWithdraw,
-              child: const Text("Withdraw"),
+              icon: const Icon(Icons.send),
+              label: const Text("Submit Withdraw Request"),
+              style: ElevatedButton.styleFrom(
+                backgroundColor: Colors.teal,
+                padding: const EdgeInsets.symmetric(vertical: 16),
+                textStyle: const TextStyle(fontSize: 18),
+                shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(10),
+                ),
+              ),
             ),
           ],
         ),
