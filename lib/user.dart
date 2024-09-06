@@ -94,7 +94,7 @@ class UserPageState extends State<UserPage> {
             const SizedBox(height: 30),
             if (!isVerified) ...[
               Text(
-                "Verify Your User",
+                "Verify Your Profile",
                 style: TextStyle(
                   fontSize: 20,
                   fontWeight: FontWeight.bold,
