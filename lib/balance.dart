@@ -1,16 +1,16 @@
 import 'package:flutter/material.dart';
 
-class WithdrawPage extends StatefulWidget {
-  const WithdrawPage({super.key});
+class BalancePage extends StatefulWidget {
+  const BalancePage({super.key});
 
   @override
-  WithdrawPageState createState() => WithdrawPageState();
+  BalancePageState createState() => BalancePageState();
 }
 
-class WithdrawPageState extends State<WithdrawPage> {
+class BalancePageState extends State<BalancePage> {
   String _selectedBank = 'Select Bank';
-  String _accountName = '';
-  String _accountNumber = '';
+  String _userName = '';
+  String _userNumber = '';
   String _amount = '';
   final double userAmount = 500.00; // Example amount
   bool isError = false;
@@ -24,7 +24,7 @@ class WithdrawPageState extends State<WithdrawPage> {
   void _submitTask() {
     // Submit task logic
     if (_selectedBank == 'Select Bank' ||
-        _accountNumber.isEmpty ||
+        _userNumber.isEmpty ||
         _amount.isEmpty) {
       setState(() {
         isError = true;
@@ -33,26 +33,26 @@ class WithdrawPageState extends State<WithdrawPage> {
       setState(() {
         isError = false;
       });
-      processWithdraw();
+      processBalance();
     }
   }
 
-  void fetchAccountName() {
-    // Placeholder to mock fetching the account name
+  void fetchUserName() {
+    // Placeholder to mock fetching the user name
     setState(() {
-      if (_accountNumber.length == 10) {
-        _accountName = 'John Doe'; // Mock account name
+      if (_userNumber.length == 10) {
+        _userName = 'John Doe'; // Mock user name
       } else {
-        _accountName = '';
+        _userName = '';
       }
     });
   }
 
-  void processWithdraw() {
+  void processBalance() {
     showDialog(
       context: context,
       builder: (context) => AlertDialog(
-        title: const Text("Withdraw Successful"),
+        title: const Text("Balance Successful"),
         content: const Text("Your withdrawal has been processed."),
         actions: [
           TextButton(
@@ -70,7 +70,7 @@ class WithdrawPageState extends State<WithdrawPage> {
   @override
   Widget build(BuildContext context) {
     return DefaultTabController(
-      length: 2, // Two tabs: Withdraw and History
+      length: 2, // Two tabs: Balance and History
       child: Scaffold(
         appBar: AppBar(
           title: const Text(
@@ -83,7 +83,7 @@ class WithdrawPageState extends State<WithdrawPage> {
           backgroundColor: Colors.teal,
           bottom: TabBar(
             tabs: const [
-              Tab(text: 'Withdraw'),
+              Tab(text: 'Balance'),
               Tab(text: 'History'),
             ],
             labelStyle: const TextStyle(
@@ -96,14 +96,14 @@ class WithdrawPageState extends State<WithdrawPage> {
         ),
         body: TabBarView(
           children: [
-            // First Tab: Withdraw Funds
+            // First Tab: Balance Funds
             Padding(
               padding: const EdgeInsets.all(16.0),
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   Text(
-                    "Enter Account Details",
+                    "Enter User Details",
                     style: TextStyle(
                       color: Colors.grey.shade600,
                       fontSize: 18,
@@ -140,7 +140,7 @@ class WithdrawPageState extends State<WithdrawPage> {
                   const SizedBox(height: 20),
                   TextField(
                     decoration: InputDecoration(
-                      labelText: 'Account Number',
+                      labelText: 'User Number',
                       labelStyle: TextStyle(color: Colors.grey.shade600),
                       border: const OutlineInputBorder(),
                       focusedBorder: OutlineInputBorder(
@@ -149,14 +149,14 @@ class WithdrawPageState extends State<WithdrawPage> {
                     ),
                     keyboardType: TextInputType.number,
                     onChanged: (value) {
-                      _accountNumber = value;
-                      fetchAccountName();
+                      _userNumber = value;
+                      fetchUserName();
                     },
                   ),
                   const SizedBox(height: 10),
-                  if (_accountName.isNotEmpty)
+                  if (_userName.isNotEmpty)
                     Text(
-                      'Account Name: $_accountName',
+                      'User Name: $_userName',
                       style: const TextStyle(
                         color: Colors.teal,
                         fontWeight: FontWeight.bold,

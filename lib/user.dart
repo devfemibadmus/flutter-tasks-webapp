@@ -3,20 +3,20 @@ import 'package:flutter/material.dart';
 import 'dart:html' as html;
 import 'package:flutter/services.dart';
 
-class AccountPage extends StatefulWidget {
-  const AccountPage({super.key});
+class UserPage extends StatefulWidget {
+  const UserPage({super.key});
 
   @override
-  AccountPageState createState() => AccountPageState();
+  UserPageState createState() => UserPageState();
 }
 
-class AccountPageState extends State<AccountPage> {
+class UserPageState extends State<UserPage> {
   bool isVerified = false;
   double totalEarned = 100.50;
   String? IDFileName;
   String? govIdFileName;
 
-  void verifyAccount() {}
+  void verifyUser() {}
 
   void selectIDFile() {
     html.FileUploadInputElement ninInput = html.FileUploadInputElement()
@@ -67,7 +67,7 @@ class AccountPageState extends State<AccountPage> {
     return Scaffold(
       appBar: AppBar(
         title: const Text(
-          "Account",
+          "Nigga Mike",
           style: TextStyle(
             color: Colors.white,
             fontWeight: FontWeight.bold,
@@ -94,7 +94,7 @@ class AccountPageState extends State<AccountPage> {
             const SizedBox(height: 30),
             if (!isVerified) ...[
               Text(
-                "Verify Your Account",
+                "Verify Your User",
                 style: TextStyle(
                   fontSize: 20,
                   fontWeight: FontWeight.bold,
@@ -175,9 +175,9 @@ class AccountPageState extends State<AccountPage> {
                       borderRadius: BorderRadius.circular(12),
                     ),
                   ),
-                  onPressed: verifyAccount,
+                  onPressed: verifyUser,
                   child: const Text(
-                    "Verify Account",
+                    "Verify User",
                     style: TextStyle(fontSize: 16, color: Colors.white),
                   ),
                 ),
@@ -193,7 +193,7 @@ class AccountPageState extends State<AccountPage> {
             ] else ...[
               Center(
                 child: Text(
-                  "Account Verified",
+                  "User Verified",
                   style: TextStyle(
                     color: Colors.teal.shade700,
                     fontSize: 18,

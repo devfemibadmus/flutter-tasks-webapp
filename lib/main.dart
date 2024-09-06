@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'balance.dart';
 import 'tasks.dart';
-import 'account.dart';
+import 'user.dart';
 
 void main() {
   runApp(const MyApp());
@@ -18,9 +18,9 @@ class MyAppState extends State<MyApp> {
   int _selectedIndex = 1;
 
   static final List<Widget> _pages = <Widget>[
-    const WithdrawPage(),
+    const BalancePage(),
     const TasksPage(),
-    const AccountPage(),
+    const UserPage(),
   ];
 
   void _onItemTapped(int index) {
@@ -43,7 +43,7 @@ class MyAppState extends State<MyApp> {
                 icon: Icon(Icons.attach_money), label: 'Balance'),
             BottomNavigationBarItem(icon: Icon(Icons.task), label: 'Tasks'),
             BottomNavigationBarItem(
-                icon: Icon(Icons.account_circle), label: 'Account'),
+                icon: Icon(Icons.account_circle), label: 'Nigga Mike'),
           ],
           currentIndex: _selectedIndex,
           onTap: _onItemTapped,
