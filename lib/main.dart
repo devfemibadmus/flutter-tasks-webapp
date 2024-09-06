@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'withdraw.dart';
+import 'balance.dart';
 import 'tasks.dart';
 import 'account.dart';
 
@@ -15,7 +15,7 @@ class MyApp extends StatefulWidget {
 }
 
 class MyAppState extends State<MyApp> {
-  int _selectedIndex = 0;
+  int _selectedIndex = 1;
 
   static final List<Widget> _pages = <Widget>[
     const WithdrawPage(),

@@ -16,16 +16,19 @@ class TasksPageState extends State<TasksPage> {
 
   List<Map<String, String>> tasks = [
     {
+      "amount": "\$0.7",
       "name": "Reflections in a Car Window Task",
       "description":
           "Photograph reflections in a car window, showing both the interior and the world outside."
     },
     {
+      "amount": "\$0.7",
       "name": "Close-Up of a Flower Task",
       "description":
           "Capture a close-up of a flower, focusing on its petals, colors, and intricate details."
     },
     {
+      "amount": "\$0.7",
       "name": "Dramatic Black and White Task",
       "description":
           "Create a dramatic black-and-white photo that emphasizes contrast, light, and shadow."
@@ -89,7 +92,7 @@ class TasksPageState extends State<TasksPage> {
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     Text(
-                      task['name']!,
+                      "${task['amount']!} ${task['name']!}",
                       style: const TextStyle(
                         fontSize: 18,
                         fontWeight: FontWeight.bold,
@@ -233,7 +236,7 @@ class TaskDetailPageState extends State<TaskDetailPage> {
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             Text(
-              widget.task['name']!,
+              "${widget.task['name']!} (${widget.task['amount']!})",
               style: const TextStyle(fontSize: 22, fontWeight: FontWeight.bold),
             ),
             const SizedBox(height: 10),
