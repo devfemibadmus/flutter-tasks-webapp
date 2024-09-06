@@ -246,27 +246,28 @@ class TaskDetailPageState extends State<TaskDetailPage> {
               height: 200,
               width: double.infinity,
               color: Colors.grey.shade300,
-              child: selectedImage != null
-                  ? Image.network(html.Url.createObjectUrl(selectedImage!))
-                  : const Center(child: Text("No image selected")),
-            ),
-            const SizedBox(height: 20),
-            ElevatedButton.icon(
-              onPressed: _uploadImage,
-              icon: const Icon(Icons.upload_file),
-              label: const Text("Upload Image"),
-              style: ElevatedButton.styleFrom(
-                backgroundColor: Colors.orange,
-                padding: const EdgeInsets.all(16),
+              child: GestureDetector(
+                onTap: _uploadImage,
+                child: selectedImage != null
+                    ? Image.network(html.Url.createObjectUrl(selectedImage!))
+                    : const Center(
+                        child: Text("No image selected, Click to Upload Image"),
+                      ),
               ),
             ),
             const SizedBox(height: 20),
             ElevatedButton.icon(
               onPressed: _submitTask,
-              icon: const Icon(Icons.check),
-              label: const Text("Submit Task"),
+              icon: const Icon(Icons.check, color: Colors.white),
+              label: const Text(
+                "Submit Task",
+                style: TextStyle(
+                  fontWeight: FontWeight.bold,
+                  color: Colors.white,
+                ),
+              ),
               style: ElevatedButton.styleFrom(
-                backgroundColor: Colors.green,
+                backgroundColor: Colors.teal,
                 padding: const EdgeInsets.all(16),
               ),
             ),

@@ -93,54 +93,54 @@ class AccountPageState extends State<AccountPage> {
             ),
             const SizedBox(height: 30),
             if (!isVerified) ...[
-              const Text(
+              Text(
                 "Verify Your Account",
                 style: TextStyle(
                   fontSize: 20,
                   fontWeight: FontWeight.bold,
-                  color: Colors.teal,
+                  color: Colors.grey.shade600,
                 ),
               ),
               const SizedBox(height: 20),
-              const Text(
+              Text(
                 "We kindly request verification to ensure that participants are qualified to contribute to training AI tasks. "
                 "This helps us maintain quality and ensures fair compensation for your valuable work. Thank you for your understanding.",
                 style: TextStyle(
                   fontSize: 16,
-                  color: Colors.teal,
+                  color: Colors.grey.shade600,
                 ),
               ),
               const SizedBox(height: 20),
-              const Text(
+              Text(
                 "Please fill out the form below:",
                 style: TextStyle(
                   fontSize: 16,
                   fontWeight: FontWeight.bold,
-                  color: Colors.teal,
+                  color: Colors.grey.shade600,
                 ),
               ),
               const SizedBox(height: 10),
-              const Text(
+              Text(
                 "1: Upload a government-issued ID.",
                 style: TextStyle(
                   fontSize: 16,
-                  color: Colors.teal,
+                  color: Colors.grey.shade600,
                 ),
               ),
               const SizedBox(height: 5),
-              const Text(
+              Text(
                 "2: Upload your student ID or educational document (PDF, JPG, PNG).",
                 style: TextStyle(
                   fontSize: 16,
-                  color: Colors.teal,
+                  color: Colors.grey.shade600,
                 ),
               ),
               const SizedBox(height: 5),
-              const Text(
+              Text(
                 "3: Note: There is a third-party verification service fee, not charged by us.",
                 style: TextStyle(
                   fontSize: 16,
-                  color: Colors.teal,
+                  color: Colors.grey.shade600,
                 ),
               ),
               const SizedBox(height: 16),
@@ -187,7 +187,7 @@ class AccountPageState extends State<AccountPage> {
                 "Earn \$0.03 per person referred",
                 style: TextStyle(
                   fontSize: 16,
-                  color: Colors.teal.shade700,
+                  color: Colors.grey.shade600,
                 ),
               ),
             ] else ...[
@@ -305,7 +305,7 @@ class AccountPageState extends State<AccountPage> {
           data: ThemeData(
             checkboxTheme: CheckboxThemeData(
               side: BorderSide(
-                  color: Colors.teal.shade700), // Border color of the checkbox
+                  color: Colors.grey.shade600), // Border color of the checkbox
             ),
           ),
           child: Checkbox(
@@ -316,7 +316,7 @@ class AccountPageState extends State<AccountPage> {
         Expanded(
           child: Text(
             label,
-            style: TextStyle(fontSize: 16, color: Colors.teal.shade700),
+            style: TextStyle(fontSize: 16, color: Colors.grey.shade600),
           ),
         ),
       ],

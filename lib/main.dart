@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'withdraw_page.dart';
+import 'withdraw.dart';
 import 'tasks.dart';
 import 'account.dart';
 
@@ -37,7 +37,7 @@ class MyAppState extends State<MyApp> {
         bottomNavigationBar: BottomNavigationBar(
           selectedLabelStyle: const TextStyle(fontWeight: FontWeight.bold),
           selectedItemColor: Colors.teal.shade700,
-          unselectedItemColor: Colors.teal,
+          unselectedItemColor: Colors.grey.shade600,
           items: const <BottomNavigationBarItem>[
             BottomNavigationBarItem(
                 icon: Icon(Icons.attach_money), label: 'Withdraw'),
