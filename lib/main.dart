@@ -40,7 +40,7 @@ class MyAppState extends State<MyApp> {
           unselectedItemColor: Colors.grey.shade600,
           items: const <BottomNavigationBarItem>[
             BottomNavigationBarItem(
-                icon: Icon(Icons.attach_money), label: 'Withdraw'),
+                icon: Icon(Icons.attach_money), label: 'Balance'),
             BottomNavigationBarItem(icon: Icon(Icons.task), label: 'Tasks'),
             BottomNavigationBarItem(
                 icon: Icon(Icons.account_circle), label: 'Account'),
