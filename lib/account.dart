@@ -31,6 +31,9 @@ class AccountPageState extends State<AccountPage> {
     bool obscureText = false,
   }) {
     return TextField(
+      style: TextStyle(color: Colors.grey.shade600),
+      cursorErrorColor: Colors.red,
+      cursorColor: Colors.grey.shade600,
       controller: controller,
       decoration: InputDecoration(
         labelText: label,
@@ -100,75 +103,80 @@ class AccountPageState extends State<AccountPage> {
     return Scaffold(
       appBar: AppBar(
         title: Text(
-          isSignUp ? 'Create an account' : 'Log in to your account',
+          isSignUp ? 'Create an account' : 'Sign in to your account',
           style:
               const TextStyle(color: Colors.white, fontWeight: FontWeight.bold),
         ),
         backgroundColor: Colors.teal,
       ),
-      body: Padding(
+      body: Container(
         padding: const EdgeInsets.all(16.0),
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            if (errorMessage.isNotEmpty)
-              Text(
-                errorMessage,
-                style: const TextStyle(color: Colors.red),
-              ),
-            if (successMessage.isNotEmpty)
-              Text(
-                successMessage,
-                style: const TextStyle(color: Colors.teal),
-              ),
-            const SizedBox(height: 20),
-            if (isSignUp) ...[
+        child: SingleChildScrollView(
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              const SizedBox(height: 50),
+              Image.asset('logo.png', height: 180),
+              const SizedBox(height: 50),
+              if (errorMessage.isNotEmpty)
+                Text(
+                  errorMessage,
+                  style: const TextStyle(color: Colors.red),
+                ),
+              if (successMessage.isNotEmpty)
+                Text(
+                  successMessage,
+                  style: const TextStyle(color: Colors.teal),
+                ),
+              const SizedBox(height: 20),
+              if (isSignUp) ...[
+                _buildInputField(
+                  controller: fullNameController,
+                  label: 'Full Name',
+                ),
+                const SizedBox(height: 20),
+              ],
               _buildInputField(
-                controller: fullNameController,
-                label: 'Full Name',
+                controller: emailController,
+                label: 'Email',
               ),
               const SizedBox(height: 20),
+              _buildInputField(
+                controller: passwordController,
+                label: 'Password',
+                obscureText: true,
+              ),
+              const SizedBox(height: 20),
+              ElevatedButton(
+                onPressed: () {
+                  if (isSignUp) {
+                    handleSignUp();
+                  } else {
+                    handleSignIn();
+                  }
+                },
+                style: ElevatedButton.styleFrom(
+                  backgroundColor: Colors.teal,
+                  padding: const EdgeInsets.all(16.0),
+                ),
+                child: const Text(
+                  'Submit',
+                  style: TextStyle(
+                      color: Colors.white, fontWeight: FontWeight.bold),
+                ),
+              ),
+              const SizedBox(height: 20),
+              TextButton(
+                onPressed: toggleView,
+                child: Text(
+                  isSignUp
+                      ? 'Already have an account? Sign In'
+                      : 'Don\'t have an account? Sign Up',
+                  style: TextStyle(color: Colors.teal.shade700),
+                ),
+              ),
             ],
-            _buildInputField(
-              controller: emailController,
-              label: 'Email',
-            ),
-            const SizedBox(height: 20),
-            _buildInputField(
-              controller: passwordController,
-              label: 'Password',
-              obscureText: true,
-            ),
-            const SizedBox(height: 20),
-            ElevatedButton(
-              onPressed: () {
-                if (isSignUp) {
-                  handleSignUp();
-                } else {
-                  handleSignIn();
-                }
-              },
-              style: ElevatedButton.styleFrom(
-                backgroundColor: Colors.teal,
-                padding: const EdgeInsets.all(16.0),
-              ),
-              child: const Text(
-                'Submit',
-                style:
-                    TextStyle(color: Colors.white, fontWeight: FontWeight.bold),
-              ),
-            ),
-            const SizedBox(height: 20),
-            TextButton(
-              onPressed: toggleView,
-              child: Text(
-                isSignUp
-                    ? 'Already have an account? Sign In'
-                    : 'Don\'t have an account? Sign Up',
-                style: TextStyle(color: Colors.teal.shade700),
-              ),
-            ),
-          ],
+          ),
         ),
       ),
     );
