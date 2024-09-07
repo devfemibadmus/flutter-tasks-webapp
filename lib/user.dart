@@ -207,6 +207,8 @@ class UserPageState extends State<UserPage> {
               children: [
                 Expanded(
                   child: TextField(
+                    cursorErrorColor: Colors.red,
+                    cursorColor: Colors.grey.shade600,
                     controller: TextEditingController(text: 'referralLink'),
                     readOnly: true,
                     decoration: InputDecoration(

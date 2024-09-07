@@ -139,6 +139,9 @@ class BalancePageState extends State<BalancePage> {
                   ),
                   const SizedBox(height: 20),
                   TextField(
+                    style: TextStyle(color: Colors.grey.shade600),
+                    cursorErrorColor: Colors.red,
+                    cursorColor: Colors.grey.shade600,
                     decoration: InputDecoration(
                       labelText: 'User Number',
                       labelStyle: TextStyle(color: Colors.grey.shade600),
@@ -164,6 +167,9 @@ class BalancePageState extends State<BalancePage> {
                     ),
                   const SizedBox(height: 20),
                   TextField(
+                    style: TextStyle(color: Colors.grey.shade600),
+                    cursorErrorColor: Colors.red,
+                    cursorColor: Colors.grey.shade600,
                     keyboardType: TextInputType.number,
                     decoration: InputDecoration(
                       labelText: 'Amount',
