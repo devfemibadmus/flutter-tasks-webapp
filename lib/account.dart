@@ -99,9 +99,11 @@ class AccountPageState extends State<AccountPage> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text(isSignUp ? 'Create an account' : 'Log in to your account',
-            style: const TextStyle(
-                color: Colors.white, fontWeight: FontWeight.bold)),
+        title: Text(
+          isSignUp ? 'Create an account' : 'Log in to your account',
+          style:
+              const TextStyle(color: Colors.white, fontWeight: FontWeight.bold),
+        ),
         backgroundColor: Colors.teal,
       ),
       body: Padding(
@@ -109,7 +111,6 @@ class AccountPageState extends State<AccountPage> {
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
-            // Display error message
             if (errorMessage.isNotEmpty)
               Text(
                 errorMessage,
@@ -121,8 +122,6 @@ class AccountPageState extends State<AccountPage> {
                 style: const TextStyle(color: Colors.teal),
               ),
             const SizedBox(height: 20),
-
-            // Show additional fields for Sign Up
             if (isSignUp) ...[
               _buildInputField(
                 controller: fullNameController,
@@ -153,18 +152,21 @@ class AccountPageState extends State<AccountPage> {
                 backgroundColor: Colors.teal,
                 padding: const EdgeInsets.all(16.0),
               ),
-              child: const Text('Submit',
-                  style: TextStyle(
-                      color: Colors.white, fontWeight: FontWeight.bold)),
+              child: const Text(
+                'Submit',
+                style:
+                    TextStyle(color: Colors.white, fontWeight: FontWeight.bold),
+              ),
             ),
             const SizedBox(height: 20),
             TextButton(
               onPressed: toggleView,
               child: Text(
-                  isSignUp
-                      ? 'Already have an account? Sign In'
-                      : 'Don\'t have an account? Sign Up',
-                  style: TextStyle(color: Colors.teal.shade700)),
+                isSignUp
+                    ? 'Already have an account? Sign In'
+                    : 'Don\'t have an account? Sign Up',
+                style: TextStyle(color: Colors.teal.shade700),
+              ),
             ),
           ],
         ),
