@@ -12,10 +12,17 @@ class AccountPageState extends State<AccountPage> {
 
   final TextEditingController emailController = TextEditingController();
   final TextEditingController passwordController = TextEditingController();
+  final TextEditingController firstNameController = TextEditingController();
+  final TextEditingController lastNameController = TextEditingController();
+
+  String errorMessage = '';
+  String successMessage = '';
 
   void toggleView() {
     setState(() {
       isSignUp = !isSignUp;
+      errorMessage = '';
+      successMessage = '';
     });
   }
 
@@ -34,6 +41,57 @@ class AccountPageState extends State<AccountPage> {
     );
   }
 
+  void handleSignUp() {
+    setState(() {
+      // Reset messages
+      errorMessage = '';
+      successMessage = '';
+
+      // Validation
+      if (firstNameController.text.isEmpty ||
+          lastNameController.text.isEmpty ||
+          emailController.text.isEmpty ||
+          passwordController.text.isEmpty) {
+        errorMessage = 'All fields are required for Sign Up.';
+      } else {
+        // Assume success if validated. Here, you'd typically send the data to a server.
+        successMessage = 'Sign Up successful! Please sign in.';
+        clearFields();
+        toggleView(); // Switch to sign in after sign up
+      }
+    });
+  }
+
+  void handleSignIn() {
+    setState(() {
+      // Reset messages
+      errorMessage = '';
+      successMessage = '';
+
+      // Validation
+      if (emailController.text.isEmpty || passwordController.text.isEmpty) {
+        errorMessage = 'Email and password are required for Sign In.';
+      } else {
+        // Fake validation for demo purposes
+        // Normally, you'd validate against a database or API response
+        if (emailController.text == "test@example.com" &&
+            passwordController.text == "password") {
+          successMessage = 'Login successful!';
+          errorMessage = '';
+        } else {
+          errorMessage = 'Invalid email or password.';
+        }
+      }
+    });
+  }
+
+  void clearFields() {
+    emailController.clear();
+    passwordController.clear();
+    firstNameController.clear();
+    lastNameController.clear();
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -46,6 +104,32 @@ class AccountPageState extends State<AccountPage> {
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
+            // Display error message
+            if (errorMessage.isNotEmpty)
+              Text(
+                errorMessage,
+                style: const TextStyle(color: Colors.red),
+              ),
+            if (successMessage.isNotEmpty)
+              Text(
+                successMessage,
+                style: const TextStyle(color: Colors.green),
+              ),
+            const SizedBox(height: 20),
+
+            // Show additional fields for Sign Up
+            if (isSignUp) ...[
+              _buildInputField(
+                controller: firstNameController,
+                label: 'First Name',
+              ),
+              const SizedBox(height: 20),
+              _buildInputField(
+                controller: lastNameController,
+                label: 'Last Name',
+              ),
+              const SizedBox(height: 20),
+            ],
             _buildInputField(
               controller: emailController,
               label: 'Email',
@@ -59,7 +143,11 @@ class AccountPageState extends State<AccountPage> {
             const SizedBox(height: 20),
             ElevatedButton(
               onPressed: () {
-                // Handle Sign Up / Sign In
+                if (isSignUp) {
+                  handleSignUp();
+                } else {
+                  handleSignIn();
+                }
               },
               style: ElevatedButton.styleFrom(
                 backgroundColor: Colors.teal,
