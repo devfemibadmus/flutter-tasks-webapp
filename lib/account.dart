@@ -12,8 +12,7 @@ class AccountPageState extends State<AccountPage> {
 
   final TextEditingController emailController = TextEditingController();
   final TextEditingController passwordController = TextEditingController();
-  final TextEditingController firstNameController = TextEditingController();
-  final TextEditingController lastNameController = TextEditingController();
+  final TextEditingController fullNameController = TextEditingController();
 
   String errorMessage = '';
   String successMessage = '';
@@ -35,7 +34,13 @@ class AccountPageState extends State<AccountPage> {
       controller: controller,
       decoration: InputDecoration(
         labelText: label,
-        border: const OutlineInputBorder(),
+        labelStyle: TextStyle(color: Colors.grey.shade600),
+        focusedBorder: OutlineInputBorder(
+          borderSide: BorderSide(color: Colors.teal.shade300),
+        ),
+        border: OutlineInputBorder(
+          borderSide: BorderSide(color: Colors.teal.shade300),
+        ),
       ),
       obscureText: obscureText,
     );
@@ -48,8 +53,7 @@ class AccountPageState extends State<AccountPage> {
       successMessage = '';
 
       // Validation
-      if (firstNameController.text.isEmpty ||
-          lastNameController.text.isEmpty ||
+      if (fullNameController.text.isEmpty ||
           emailController.text.isEmpty ||
           passwordController.text.isEmpty) {
         errorMessage = 'All fields are required for Sign Up.';
@@ -88,15 +92,16 @@ class AccountPageState extends State<AccountPage> {
   void clearFields() {
     emailController.clear();
     passwordController.clear();
-    firstNameController.clear();
-    lastNameController.clear();
+    fullNameController.clear();
   }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text(isSignUp ? 'Sign Up' : 'Sign In'),
+        title: Text(isSignUp ? 'Create an account' : 'Log in to your account',
+            style: const TextStyle(
+                color: Colors.white, fontWeight: FontWeight.bold)),
         backgroundColor: Colors.teal,
       ),
       body: Padding(
@@ -113,20 +118,15 @@ class AccountPageState extends State<AccountPage> {
             if (successMessage.isNotEmpty)
               Text(
                 successMessage,
-                style: const TextStyle(color: Colors.green),
+                style: const TextStyle(color: Colors.teal),
               ),
             const SizedBox(height: 20),
 
             // Show additional fields for Sign Up
             if (isSignUp) ...[
               _buildInputField(
-                controller: firstNameController,
-                label: 'First Name',
-              ),
-              const SizedBox(height: 20),
-              _buildInputField(
-                controller: lastNameController,
-                label: 'Last Name',
+                controller: fullNameController,
+                label: 'Full Name',
               ),
               const SizedBox(height: 20),
             ],
@@ -153,16 +153,18 @@ class AccountPageState extends State<AccountPage> {
                 backgroundColor: Colors.teal,
                 padding: const EdgeInsets.all(16.0),
               ),
-              child: Text(isSignUp ? 'Sign Up' : 'Sign In'),
+              child: const Text('Submit',
+                  style: TextStyle(
+                      color: Colors.white, fontWeight: FontWeight.bold)),
             ),
             const SizedBox(height: 20),
             TextButton(
               onPressed: toggleView,
               child: Text(
-                isSignUp
-                    ? 'Already have an account? Sign In'
-                    : 'Don\'t have an account? Sign Up',
-              ),
+                  isSignUp
+                      ? 'Already have an account? Sign In'
+                      : 'Don\'t have an account? Sign Up',
+                  style: TextStyle(color: Colors.teal.shade700)),
             ),
           ],
         ),
