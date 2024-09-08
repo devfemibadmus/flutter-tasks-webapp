@@ -97,7 +97,7 @@ Future<User> userData() async {
   return user;
 }
 
-Future<List<Task>> userTasksData() async {
+Future<List<Task>> userTasks() async {
   List<Task> tasks = [];
   try {
     final response = await http.post(

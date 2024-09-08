@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:tasks/account.dart';
+import 'package:tasks/model.dart';
 import 'balance.dart';
 import 'tasks.dart';
 import 'user.dart';
@@ -17,6 +18,7 @@ class MyApp extends StatefulWidget {
 
 class MyAppState extends State<MyApp> {
   int _selectedIndex = 1;
+  User user = defaultUser;
 
   static final List<Widget> _pages = <Widget>[
     const BalancePage(),
@@ -24,20 +26,18 @@ class MyAppState extends State<MyApp> {
     const UserPage(),
   ];
 
-  Future<bool> checkLoginStatus() async {
-    await Future.delayed(const Duration(seconds: 2));
-    return false;
-  }
-
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      home: FutureBuilder<bool>(
-        future: checkLoginStatus(),
+      home: FutureBuilder<User>(
+        future: userData(),
         builder: (context, snapshot) {
           if (snapshot.connectionState == ConnectionState.waiting) {
             return const Center(child: CircularProgressIndicator());
-          } else if (snapshot.hasData && snapshot.data == true) {
+          } else if (snapshot.hasData) {
+            setState(() {
+              user = snapshot.data!;
+            });
             return home();
           } else {
             return const AccountPage();
