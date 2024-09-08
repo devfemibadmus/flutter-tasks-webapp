@@ -1,4 +1,7 @@
+// ignore_for_file: avoid_web_libraries_in_flutter
+
 import 'dart:convert';
+import 'dart:html' as html;
 import 'package:http/http.dart' as http;
 
 class User {
@@ -82,16 +85,19 @@ User defaultUser = User(
   status: Status(pendingTasks: 0, passedTasks: 0, failedTasks: 0),
 );
 
-Future<User> userData() async {
+Future<User> getUserData() async {
   User user = defaultUser;
+  String token = html.window.localStorage['token'] ?? '';
   try {
     final response = await http.post(
-      Uri.parse('http://127.0.0.1:8000/getuser/'),
-      headers: {"Content-Type": "application/json"},
+      Uri.parse('http://127.0.0.1:8000/user/'),
+      headers: {"Content-Type": "application/x-www-form-urlencoded"},
+      body: {"token": token},
     );
+    final json = jsonDecode(response.body);
     if (response.statusCode == 200) {
-      final data = jsonDecode(response.body);
-      user = User.fromJson(data);
+      user = User.fromJson(json);
+      html.window.localStorage['token'] = json['token'] ?? '';
     } else {
       print('Failed: ${response.statusCode}');
     }
@@ -101,15 +107,17 @@ Future<User> userData() async {
   return user;
 }
 
-Future<List<Task>> userTasks() async {
+Future<List<Task>> getUserTasks() async {
   List<Task> tasks = [];
+  String token = html.window.localStorage['token'] ?? '';
   try {
     final response = await http.post(
       Uri.parse('http://127.0.0.1:8000/tasks/'),
-      headers: {"Content-Type": "application/json"},
+      headers: {"Content-Type": "application/x-www-form-urlencoded"},
+      body: {"token": token},
     );
+    final data = jsonDecode(response.body);
     if (response.statusCode == 200) {
-      final data = jsonDecode(response.body);
       tasks = List<Task>.from(data['tasks'].map((task) => Task.fromJson(task)));
     } else {
       print('Failed: ${response.statusCode}');
@@ -120,7 +128,7 @@ Future<List<Task>> userTasks() async {
   return tasks;
 }
 
-Future<Map<String, dynamic>> login(String email, String password) async {
+Future<Map<String, dynamic>> getUserLogin(String email, String password) async {
   Map<String, dynamic> json = {};
   try {
     final response = await http.post(
@@ -132,6 +140,7 @@ Future<Map<String, dynamic>> login(String email, String password) async {
       },
     );
     json = jsonDecode(response.body);
+    html.window.localStorage['token'] = json['token'] ?? '';
   } catch (e) {
     print('Error: $e');
   }

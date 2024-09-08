@@ -21,7 +21,7 @@ class MyAppState extends State<MyApp> {
   Widget build(BuildContext context) {
     return MaterialApp(
       home: FutureBuilder<User>(
-        future: userData(),
+        future: getUserData(),
         builder: (context, snapshot) {
           if (snapshot.connectionState == ConnectionState.waiting) {
             return const Center(child: CircularProgressIndicator());
@@ -56,7 +56,7 @@ class HomePageState extends State<HomePage> {
   }
 
   Future<void> _updateUser() async {
-    User user = await userData();
+    User user = await getUserData();
     setState(() {
       user = user;
     });

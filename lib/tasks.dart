@@ -74,7 +74,7 @@ class TasksPageState extends State<TasksPage> {
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     Text(
-                      "${task.amount} ${task.title}",
+                      "\$${task.amount} ${task.title}",
                       style: const TextStyle(
                         fontSize: 18,
                         fontWeight: FontWeight.bold,
@@ -221,7 +221,7 @@ class TaskDetailPageState extends State<TaskDetailPage> {
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             Text(
-              "${widget.task.title} (${widget.task.amount})",
+              widget.task.title,
               style: const TextStyle(fontSize: 22, fontWeight: FontWeight.bold),
             ),
             const SizedBox(height: 10),

@@ -10,7 +10,7 @@ class AccountPage extends StatefulWidget {
 }
 
 class AccountPageState extends State<AccountPage> {
-  bool isSignUp = true;
+  bool isSignUp = false;
 
   final TextEditingController emailController = TextEditingController();
   final TextEditingController passwordController = TextEditingController();
@@ -81,8 +81,7 @@ class AccountPageState extends State<AccountPage> {
       errorMessage = 'Email and password are required for Sign In.';
     } else {
       Map<String, dynamic> json =
-          await login(emailController.text, passwordController.text);
-      print("json: $json");
+          await getUserLogin(emailController.text, passwordController.text);
       if (json.isNotEmpty && json['success'] == true) {
         User user = User.fromJson(json);
         setState(() {
