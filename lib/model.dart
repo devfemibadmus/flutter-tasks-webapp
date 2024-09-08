@@ -90,7 +90,7 @@ Future<User> getUserData() async {
   String token = html.window.localStorage['token'] ?? '';
   try {
     final response = await http.post(
-      Uri.parse('http://127.0.0.1:8000/user/'),
+      Uri.parse('http://127.0.0.1:8000/api/v1/user/'),
       headers: {"Content-Type": "application/x-www-form-urlencoded"},
       body: {"token": token},
     );
@@ -112,7 +112,7 @@ Future<List<Task>> getUserTasks() async {
   String token = html.window.localStorage['token'] ?? '';
   try {
     final response = await http.post(
-      Uri.parse('http://127.0.0.1:8000/tasks/'),
+      Uri.parse('http://127.0.0.1:8000/api/v1/tasks/'),
       headers: {"Content-Type": "application/x-www-form-urlencoded"},
       body: {"token": token},
     );
@@ -132,7 +132,7 @@ Future<Map<String, dynamic>> getUserLogin(String email, String password) async {
   Map<String, dynamic> json = {};
   try {
     final response = await http.post(
-      Uri.parse('http://127.0.0.1:8000/login/'),
+      Uri.parse('http://127.0.0.1:8000/api/v1/signin/'),
       headers: {"Content-Type": "application/x-www-form-urlencoded"},
       body: {
         'email': email,
