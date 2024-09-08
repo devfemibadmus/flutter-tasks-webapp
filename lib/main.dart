@@ -17,36 +17,53 @@ class MyApp extends StatefulWidget {
 }
 
 class MyAppState extends State<MyApp> {
+  @override
+  Widget build(BuildContext context) {
+    return MaterialApp(
+      home: FutureBuilder<User>(
+        future: userData(),
+        builder: (context, snapshot) {
+          if (snapshot.connectionState == ConnectionState.waiting) {
+            return const Center(child: CircularProgressIndicator());
+          } else if (snapshot.hasData) {
+            User user = snapshot.data!;
+            return HomePage(user: user);
+          } else {
+            return const AccountPage();
+          }
+        },
+      ),
+    );
+  }
+}
+
+class HomePage extends StatefulWidget {
+  final User user;
+  const HomePage({super.key, required this.user});
+
+  @override
+  HomePageState createState() => HomePageState();
+}
+
+class HomePageState extends State<HomePage> {
   int _selectedIndex = 1;
-  User user = defaultUser;
+  late User user;
 
   @override
   void initState() {
     super.initState();
-    _loadUserData();
+    user = widget.user;
   }
 
-  Future<void> _loadUserData() async {
-    final fetchedUser = await userData();
+  Future<void> updateUser() async {
+    User user = await userData();
     setState(() {
-      user = fetchedUser;
+      user = user;
     });
   }
 
   @override
   Widget build(BuildContext context) {
-    if (user.name == '' && user.email == '') {
-      return const MaterialApp(
-        home: AccountPage(),
-      );
-    } else {
-      return MaterialApp(
-        home: home(),
-      );
-    }
-  }
-
-  Widget home() {
     return Scaffold(
       body: IndexedStack(
         index: _selectedIndex,
