@@ -29,20 +29,20 @@ class User {
 
 class Status {
   int pendingTasks;
-  int completedTasks;
-  int totalTasksTaken;
+  int passedTasks;
+  int failedTasks;
 
   Status({
     required this.pendingTasks,
-    required this.completedTasks,
-    required this.totalTasksTaken,
+    required this.passedTasks,
+    required this.failedTasks,
   });
 
   factory Status.fromJson(Map<String, dynamic> json) {
     return Status(
       pendingTasks: json['pendingTasks'],
-      completedTasks: json['completedTasks'],
-      totalTasksTaken: json['totalTasksTaken'],
+      passedTasks: json['passedTasks'],
+      failedTasks: json['failedTasks'],
     );
   }
 }
@@ -75,7 +75,7 @@ User defaultUser = User(
   email: '',
   balance: '',
   tasks: [],
-  status: Status(pendingTasks: 0, completedTasks: 0, totalTasksTaken: 0),
+  status: Status(pendingTasks: 0, passedTasks: 0, failedTasks: 0),
 );
 
 Future<User> userData() async {
