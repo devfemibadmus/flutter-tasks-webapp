@@ -21,24 +21,29 @@ class MyAppState extends State<MyApp> {
   User user = defaultUser;
 
   @override
+  void initState() {
+    super.initState();
+    _loadUserData();
+  }
+
+  Future<void> _loadUserData() async {
+    final fetchedUser = await userData();
+    setState(() {
+      user = fetchedUser;
+    });
+  }
+
+  @override
   Widget build(BuildContext context) {
-    return MaterialApp(
-      home: FutureBuilder<User>(
-        future: userData(),
-        builder: (context, snapshot) {
-          if (snapshot.connectionState == ConnectionState.waiting) {
-            return const Center(child: CircularProgressIndicator());
-          } else if (snapshot.hasData) {
-            setState(() {
-              user = snapshot.data!;
-            });
-            return home();
-          } else {
-            return const AccountPage();
-          }
-        },
-      ),
-    );
+    if (user.name == '' && user.email == '') {
+      return const MaterialApp(
+        home: AccountPage(),
+      );
+    } else {
+      return MaterialApp(
+        home: home(),
+      );
+    }
   }
 
   Widget home() {
