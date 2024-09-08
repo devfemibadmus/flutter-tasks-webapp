@@ -4,6 +4,7 @@ import 'package:http/http.dart' as http;
 class User {
   String name;
   String email;
+  bool isVerify;
   Status status;
   String balance;
   List<Task> tasks;
@@ -14,6 +15,7 @@ class User {
     required this.status,
     required this.tasks,
     required this.balance,
+    required this.isVerify,
   });
 
   factory User.fromJson(Map<String, dynamic> json) {
@@ -21,6 +23,7 @@ class User {
       name: json['name'],
       email: json['email'],
       balance: json['balance'],
+      isVerify: json['isVerify'],
       status: Status.fromJson(json['status']),
       tasks: List<Task>.from(json['tasks'].map((task) => Task.fromJson(task))),
     );
@@ -72,9 +75,10 @@ class Task {
 
 User defaultUser = User(
   name: '',
+  tasks: [],
   email: '',
   balance: '',
-  tasks: [],
+  isVerify: false,
   status: Status(pendingTasks: 0, passedTasks: 0, failedTasks: 0),
 );
 

@@ -13,7 +13,6 @@ class UserPage extends StatefulWidget {
 }
 
 class UserPageState extends State<UserPage> {
-  bool isVerified = false;
   double totalEarned = 100.50;
   String? IDFileName;
   String? govIdFileName;
@@ -68,9 +67,9 @@ class UserPageState extends State<UserPage> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text(
-          "Nigga Mike",
-          style: TextStyle(
+        title: Text(
+          widget.user.name,
+          style: const TextStyle(
             color: Colors.white,
             fontWeight: FontWeight.bold,
           ),
@@ -94,7 +93,7 @@ class UserPageState extends State<UserPage> {
               ),
             ),
             const SizedBox(height: 30),
-            if (!isVerified) ...[
+            if (!widget.user.isVerify) ...[
               Text(
                 "Verify Your Profile",
                 style: TextStyle(
