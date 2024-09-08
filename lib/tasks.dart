@@ -13,31 +13,6 @@ class TasksPage extends StatefulWidget {
 }
 
 class TasksPageState extends State<TasksPage> {
-  int pendingTasks = 5;
-  int passedTasks = 3;
-  int failedTasks = 1;
-
-  List<Map<String, String>> tasks = [
-    {
-      "amount": "\$0.7",
-      "name": "Reflections in a Car Window Task",
-      "description":
-          "Photograph reflections in a car window, showing both the interior and the world outside."
-    },
-    {
-      "amount": "\$0.7",
-      "name": "Close-Up of a Flower Task",
-      "description":
-          "Capture a close-up of a flower, focusing on its petals, colors, and intricate details."
-    },
-    {
-      "amount": "\$0.7",
-      "name": "Dramatic Black and White Task",
-      "description":
-          "Create a dramatic black-and-white photo that emphasizes contrast, light, and shadow."
-    },
-  ];
-
   @override
   void initState() {
     super.initState();
@@ -47,12 +22,12 @@ class TasksPageState extends State<TasksPage> {
   // Mock function to fetch tasks from an API or database
   void fetchTasks() {}
 
-  void navigateToTaskDetail(Map<String, String> task, int index) {
+  void navigateToTaskDetail(Task task, int index) {
     Navigator.push(
       context,
       MaterialPageRoute(
-        builder: (context) =>
-            TaskDetailPage(task: task, index: index, total: tasks.length),
+        builder: (context) => TaskDetailPage(
+            task: task, index: index, total: widget.user.tasks.length),
       ),
     );
   }
@@ -74,7 +49,7 @@ class TasksPageState extends State<TasksPage> {
     );
   }
 
-  Widget _buildTaskCard(Map<String, String> task, int index) {
+  Widget _buildTaskCard(Task task, int index) {
     return GestureDetector(
       onTap: () => navigateToTaskDetail(task, index),
       child: Card(
@@ -95,7 +70,7 @@ class TasksPageState extends State<TasksPage> {
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     Text(
-                      "${task['amount']!} ${task['name']!}",
+                      "${task.amount} ${task.title}",
                       style: const TextStyle(
                         fontSize: 18,
                         fontWeight: FontWeight.bold,
@@ -104,7 +79,7 @@ class TasksPageState extends State<TasksPage> {
                     ),
                     const SizedBox(height: 8),
                     Text(
-                      task['description']!,
+                      task.description,
                       style: TextStyle(
                         fontSize: 16,
                         color: Colors.grey.shade600,
@@ -145,9 +120,12 @@ class TasksPageState extends State<TasksPage> {
             Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
-                _buildTaskStatus("Inreview", pendingTasks, Colors.grey),
-                _buildTaskStatus("Passed", passedTasks, Colors.green),
-                _buildTaskStatus("Failed", failedTasks, Colors.redAccent),
+                _buildTaskStatus(
+                    "Inreview", widget.user.status.pendingTasks, Colors.grey),
+                _buildTaskStatus(
+                    "Passed", widget.user.status.passedTasks, Colors.green),
+                _buildTaskStatus(
+                    "Failed", widget.user.status.failedTasks, Colors.redAccent),
               ],
             ),
             const SizedBox(height: 30),
@@ -158,9 +136,9 @@ class TasksPageState extends State<TasksPage> {
             const SizedBox(height: 10),
             Expanded(
               child: ListView.builder(
-                itemCount: tasks.length,
+                itemCount: widget.user.tasks.length,
                 itemBuilder: (context, index) {
-                  return _buildTaskCard(tasks[index], index);
+                  return _buildTaskCard(widget.user.tasks[index], index);
                 },
               ),
             ),
@@ -172,7 +150,7 @@ class TasksPageState extends State<TasksPage> {
 }
 
 class TaskDetailPage extends StatefulWidget {
-  final Map<String, String> task;
+  final Task task;
   final int index;
   final int total;
 
@@ -239,12 +217,12 @@ class TaskDetailPageState extends State<TaskDetailPage> {
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             Text(
-              "${widget.task['name']!} (${widget.task['amount']!})",
+              "${widget.task.title} (${widget.task.amount})",
               style: const TextStyle(fontSize: 22, fontWeight: FontWeight.bold),
             ),
             const SizedBox(height: 10),
             Text(
-              widget.task['description']!,
+              widget.task.description,
               style: const TextStyle(fontSize: 16),
             ),
             const SizedBox(height: 20),
