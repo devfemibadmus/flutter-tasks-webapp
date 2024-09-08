@@ -1,7 +1,9 @@
 import 'package:flutter/material.dart';
+import 'package:tasks/model.dart';
 
 class BalancePage extends StatefulWidget {
-  const BalancePage({super.key});
+  final User user;
+  const BalancePage({super.key, required this.user});
 
   @override
   BalancePageState createState() => BalancePageState();

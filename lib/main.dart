@@ -20,12 +20,6 @@ class MyAppState extends State<MyApp> {
   int _selectedIndex = 1;
   User user = defaultUser;
 
-  static final List<Widget> _pages = <Widget>[
-    const BalancePage(),
-    const TasksPage(),
-    const UserPage(),
-  ];
-
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
@@ -49,7 +43,14 @@ class MyAppState extends State<MyApp> {
 
   Widget home() {
     return Scaffold(
-      body: _pages[_selectedIndex],
+      body: IndexedStack(
+        index: _selectedIndex,
+        children: <Widget>[
+          BalancePage(user: user),
+          TasksPage(user: user),
+          UserPage(user: user),
+        ],
+      ),
       bottomNavigationBar: BottomNavigationBar(
         selectedLabelStyle: const TextStyle(fontWeight: FontWeight.bold),
         selectedItemColor: Colors.teal.shade700,

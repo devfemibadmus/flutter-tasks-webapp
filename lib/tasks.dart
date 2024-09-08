@@ -2,8 +2,11 @@ import 'package:flutter/material.dart';
 // ignore: avoid_web_libraries_in_flutter
 import 'dart:html' as html;
 
+import 'package:tasks/model.dart';
+
 class TasksPage extends StatefulWidget {
-  const TasksPage({super.key});
+  final User user;
+  const TasksPage({super.key, required this.user});
 
   @override
   TasksPageState createState() => TasksPageState();
