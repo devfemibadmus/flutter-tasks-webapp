@@ -105,7 +105,7 @@ Future<List<Task>> userTasks() async {
   List<Task> tasks = [];
   try {
     final response = await http.post(
-      Uri.parse('http://127.0.0.1:8000/getuser/'),
+      Uri.parse('http://127.0.0.1:8000/tasks/'),
       headers: {"Content-Type": "application/json"},
     );
     if (response.statusCode == 200) {
@@ -118,4 +118,27 @@ Future<List<Task>> userTasks() async {
     print('Error: $e');
   }
   return tasks;
+}
+
+Future<User> login(String email, String password) async {
+  User user = defaultUser;
+  try {
+    final response = await http.post(
+      Uri.parse('http://127.0.0.1:8000/getuser/'),
+      headers: {"Content-Type": "application/json"},
+      body: jsonEncode({
+        'email': email,
+        'password': password,
+      }),
+    );
+    if (response.statusCode == 200) {
+      final data = jsonDecode(response.body);
+      user = User.fromJson(data);
+    } else {
+      print('Failed: ${response.statusCode}');
+    }
+  } catch (e) {
+    print('Error: $e');
+  }
+  return user;
 }
