@@ -56,12 +56,10 @@ class HomePageState extends State<HomePage> {
   }
 
   Future<void> _updateUser() async {
-    print(this.user.tasks.first.title);
     User user = await getUserData();
     setState(() {
       this.user = user;
     });
-    print(this.user.tasks.first.title);
   }
 
   @override

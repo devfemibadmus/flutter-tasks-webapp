@@ -14,8 +14,7 @@ class UserPage extends StatefulWidget {
 }
 
 class UserPageState extends State<UserPage> {
-  double totalEarned = 100.50;
-  String? IDFileName;
+  String? studentFileIdName;
   String? govIdFileName;
   late User user;
 
@@ -37,7 +36,7 @@ class UserPageState extends State<UserPage> {
       if (files!.isNotEmpty) {
         final file = files.first;
         setState(() {
-          IDFileName = file.name;
+          studentFileIdName = file.name;
         });
       }
     });
@@ -159,7 +158,7 @@ class UserPageState extends State<UserPage> {
               ),
               const SizedBox(height: 30),
               _buildUploadButton(
-                text: IDFileName ??
+                text: studentFileIdName ??
                     "Upload your student ID or educational document",
                 onTap: selectIDFile,
               ),
