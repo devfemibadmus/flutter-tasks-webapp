@@ -128,6 +128,34 @@ Future<List<Task>> getUserTasks() async {
   return tasks;
 }
 
+Future<String> submitTasks(int taskId, html.File selectedImage) async {
+  String token = html.window.localStorage['token'] ?? '';
+  try {
+    var uri = Uri.parse('http://127.0.0.1:8000/api/v1/submit/');
+    var request = http.MultipartRequest('POST', uri);
+    request.fields['token'] = token;
+    request.fields['taskId'] = taskId.toString();
+    var reader = html.FileReader();
+    reader.readAsArrayBuffer(selectedImage);
+    await reader.onLoad.first;
+    var fileBytes = reader.result as List<int>;
+    var multipartFile = http.MultipartFile.fromBytes(
+      'photo',
+      fileBytes,
+      filename: selectedImage.name,
+    );
+    request.files.add(multipartFile);
+
+    var response = await request.send();
+    var responseBody = await response.stream.bytesToString();
+    final data = jsonDecode(responseBody);
+    return data['message'];
+  } catch (e) {
+    print('Error: $e');
+  }
+  return 'Something went wrong';
+}
+
 Future<Map<String, dynamic>> getUserLogin(String email, String password) async {
   Map<String, dynamic> json = {};
   try {
