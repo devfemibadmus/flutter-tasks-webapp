@@ -20,18 +20,22 @@ class TasksPageState extends State<TasksPage> {
   void initState() {
     super.initState();
     user = widget.user;
-    fetchTasks();
   }
 
-  // Mock function to fetch tasks from an API or database
-  void fetchTasks() {}
+  Future<void> _refreshTasks() async {
+    await widget.onrefresh();
+  }
 
   void navigateToTaskDetail(Task task, int index) {
     Navigator.push(
       context,
       MaterialPageRoute(
-        builder: (context) =>
-            TaskDetailPage(task: task, index: index, total: user.tasks.length),
+        builder: (context) => TaskDetailPage(
+          task: task,
+          index: index,
+          total: user.tasks.length,
+          onrefresh: _refreshTasks,
+        ),
       ),
     );
   }
@@ -157,12 +161,15 @@ class TaskDetailPage extends StatefulWidget {
   final Task task;
   final int index;
   final int total;
+  final Function() onrefresh;
 
-  const TaskDetailPage(
-      {super.key,
-      required this.task,
-      required this.index,
-      required this.total});
+  const TaskDetailPage({
+    super.key,
+    required this.task,
+    required this.index,
+    required this.total,
+    required this.onrefresh,
+  });
 
   @override
   TaskDetailPageState createState() => TaskDetailPageState();
@@ -170,10 +177,11 @@ class TaskDetailPage extends StatefulWidget {
 
 class TaskDetailPageState extends State<TaskDetailPage> {
   html.File? selectedImage;
+  bool isLoading = false;
 
   void _uploadImage() {
     html.FileUploadInputElement uploadInput = html.FileUploadInputElement();
-    uploadInput.accept = 'image/*'; // Only accept images
+    uploadInput.accept = 'image/*';
     uploadInput.click();
 
     uploadInput.onChange.listen((e) {
@@ -186,13 +194,21 @@ class TaskDetailPageState extends State<TaskDetailPage> {
     });
   }
 
-  void _submitTask() {
+  Future<void> _submitTask() async {
     if (selectedImage != null) {
-      // Mock function for API submission
-      // Implement actual API submission here
-
-      // Navigate back after submission
-      Navigator.pop(context);
+      setState(() {
+        isLoading = true;
+      });
+      String message = await submitTasks(widget.task.id, selectedImage!);
+      if (mounted) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(content: Text(message)),
+        );
+      }
+      widget.onrefresh();
+      if (mounted) {
+        Navigator.pop(context);
+      }
     } else {
       ScaffoldMessenger.of(context).showSnackBar(
         const SnackBar(
@@ -203,65 +219,91 @@ class TaskDetailPageState extends State<TaskDetailPage> {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        iconTheme: const IconThemeData(color: Colors.white),
-        title: Text(
-          "Task ${widget.index + 1} of ${widget.total}",
-          style: const TextStyle(
-            color: Colors.white,
-            fontWeight: FontWeight.bold,
+    return Stack(
+      children: [
+        Scaffold(
+          appBar: AppBar(
+            leading: IconButton(
+              icon: const Icon(Icons.arrow_back),
+              onPressed: () {
+                widget.onrefresh();
+                Navigator.pop(context);
+              },
+            ),
+            iconTheme: const IconThemeData(color: Colors.white),
+            title: Text(
+              "Task ${widget.index + 1} of ${widget.total}",
+              style: const TextStyle(
+                color: Colors.white,
+                fontWeight: FontWeight.bold,
+              ),
+            ),
+            backgroundColor: Colors.teal,
+          ),
+          body: Padding(
+            padding: const EdgeInsets.all(16.0),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Text(
+                  widget.task.title,
+                  style: const TextStyle(
+                      fontSize: 22, fontWeight: FontWeight.bold),
+                ),
+                const SizedBox(height: 10),
+                Text(
+                  widget.task.description,
+                  style: const TextStyle(fontSize: 16),
+                ),
+                const SizedBox(height: 20),
+                Container(
+                  height: 200,
+                  width: double.infinity,
+                  color: Colors.grey.shade300,
+                  child: GestureDetector(
+                    onTap: _uploadImage,
+                    child: selectedImage != null
+                        ? Image.network(
+                            html.Url.createObjectUrl(selectedImage!))
+                        : const Center(
+                            child: Text(
+                                "No image selected, Click to Upload Image"),
+                          ),
+                  ),
+                ),
+                const SizedBox(height: 20),
+                ElevatedButton.icon(
+                  onPressed: _submitTask,
+                  icon: const Icon(Icons.check, color: Colors.white),
+                  label: const Text(
+                    "Submit Task",
+                    style: TextStyle(
+                      fontWeight: FontWeight.bold,
+                      color: Colors.white,
+                    ),
+                  ),
+                  style: ElevatedButton.styleFrom(
+                    backgroundColor: Colors.teal,
+                    padding: const EdgeInsets.all(16),
+                  ),
+                ),
+              ],
+            ),
           ),
         ),
-        backgroundColor: Colors.teal,
-      ),
-      body: Padding(
-        padding: const EdgeInsets.all(16.0),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Text(
-              widget.task.title,
-              style: const TextStyle(fontSize: 22, fontWeight: FontWeight.bold),
+        if (isLoading)
+          Positioned.fill(
+            child: ModalBarrier(
+              color: Colors.black.withOpacity(0.5),
+              dismissible: false,
             ),
-            const SizedBox(height: 10),
-            Text(
-              widget.task.description,
-              style: const TextStyle(fontSize: 16),
-            ),
-            const SizedBox(height: 20),
-            Container(
-              height: 200,
-              width: double.infinity,
-              color: Colors.grey.shade300,
-              child: GestureDetector(
-                onTap: _uploadImage,
-                child: selectedImage != null
-                    ? Image.network(html.Url.createObjectUrl(selectedImage!))
-                    : const Center(
-                        child: Text("No image selected, Click to Upload Image"),
-                      ),
-              ),
-            ),
-            const SizedBox(height: 20),
-            ElevatedButton.icon(
-              onPressed: _submitTask,
-              icon: const Icon(Icons.check, color: Colors.white),
-              label: const Text(
-                "Submit Task",
-                style: TextStyle(
-                  fontWeight: FontWeight.bold,
-                  color: Colors.white,
-                ),
-              ),
-              style: ElevatedButton.styleFrom(
-                backgroundColor: Colors.teal,
-                padding: const EdgeInsets.all(16),
-              ),
-            ),
-          ],
-        ),
-      ),
+          ),
+        if (isLoading)
+          const Center(
+              child: CircularProgressIndicator(
+            color: Colors.teal,
+          )),
+      ],
     );
   }
 }
