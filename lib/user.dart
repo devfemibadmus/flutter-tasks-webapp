@@ -6,7 +6,8 @@ import 'package:tasks/model.dart';
 
 class UserPage extends StatefulWidget {
   final User user;
-  const UserPage({super.key, required this.user});
+  final Function() onrefresh;
+  const UserPage({super.key, required this.user, required this.onrefresh});
 
   @override
   UserPageState createState() => UserPageState();
@@ -16,6 +17,13 @@ class UserPageState extends State<UserPage> {
   double totalEarned = 100.50;
   String? IDFileName;
   String? govIdFileName;
+  late User user;
+
+  @override
+  void initState() {
+    super.initState();
+    user = widget.user;
+  }
 
   void verifyUser() {}
 
@@ -68,7 +76,7 @@ class UserPageState extends State<UserPage> {
     return Scaffold(
       appBar: AppBar(
         title: Text(
-          widget.user.name,
+          user.name,
           style: const TextStyle(
             color: Colors.white,
             fontWeight: FontWeight.bold,
@@ -93,7 +101,7 @@ class UserPageState extends State<UserPage> {
               ),
             ),
             const SizedBox(height: 30),
-            if (!widget.user.isVerify) ...[
+            if (!user.isVerify) ...[
               Text(
                 "Verify Your Profile",
                 style: TextStyle(

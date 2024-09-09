@@ -2,11 +2,11 @@ import 'dart:convert';
 import 'package:http/http.dart' as http;
 
 class User {
+  int balance;
   String name;
   String email;
   bool isVerify;
   Status status;
-  String balance;
   List<Task> tasks;
 
   User({
@@ -20,10 +20,10 @@ class User {
 
   factory User.fromJson(Map<String, dynamic> json) {
     return User(
-      name: json['name'],
-      email: json['email'],
-      balance: json['balance'],
-      isVerify: json['isVerify'],
+      name: json['user']['name'],
+      email: json['user']['email'],
+      balance: json['user']['balance'],
+      isVerify: json['user']['isVerify'],
       status: Status.fromJson(json['status']),
       tasks: List<Task>.from(json['tasks'].map((task) => Task.fromJson(task))),
     );
@@ -77,7 +77,7 @@ User defaultUser = User(
   name: '',
   tasks: [],
   email: '',
-  balance: '',
+  balance: 0,
   isVerify: false,
   status: Status(pendingTasks: 0, passedTasks: 0, failedTasks: 0),
 );
@@ -120,25 +120,20 @@ Future<List<Task>> userTasks() async {
   return tasks;
 }
 
-Future<User> login(String email, String password) async {
-  User user = defaultUser;
+Future<Map<String, dynamic>> login(String email, String password) async {
+  Map<String, dynamic> json = {};
   try {
     final response = await http.post(
-      Uri.parse('http://127.0.0.1:8000/getuser/'),
-      headers: {"Content-Type": "application/json"},
-      body: jsonEncode({
+      Uri.parse('http://127.0.0.1:8000/login/'),
+      headers: {"Content-Type": "application/x-www-form-urlencoded"},
+      body: {
         'email': email,
         'password': password,
-      }),
+      },
     );
-    if (response.statusCode == 200) {
-      final data = jsonDecode(response.body);
-      user = User.fromJson(data);
-    } else {
-      print('Failed: ${response.statusCode}');
-    }
+    json = jsonDecode(response.body);
   } catch (e) {
     print('Error: $e');
   }
-  return user;
+  return json;
 }

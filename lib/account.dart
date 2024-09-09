@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:tasks/main.dart';
+import 'package:tasks/model.dart';
 
 class AccountPage extends StatefulWidget {
   const AccountPage({super.key});
@@ -69,27 +71,33 @@ class AccountPageState extends State<AccountPage> {
     });
   }
 
-  void handleSignIn() {
+  Future<void> handleSignIn() async {
     setState(() {
-      // Reset messages
       errorMessage = '';
       successMessage = '';
+    });
 
-      // Validation
-      if (emailController.text.isEmpty || passwordController.text.isEmpty) {
-        errorMessage = 'Email and password are required for Sign In.';
-      } else {
-        // Fake validation for demo purposes
-        // Normally, you'd validate against a database or API response
-        if (emailController.text == "test@example.com" &&
-            passwordController.text == "password") {
+    if (emailController.text.isEmpty || passwordController.text.isEmpty) {
+      errorMessage = 'Email and password are required for Sign In.';
+    } else {
+      Map<String, dynamic> json =
+          await login(emailController.text, passwordController.text);
+      print("json: $json");
+      if (json.isNotEmpty && json['success'] == true) {
+        User user = User.fromJson(json);
+        setState(() {
           successMessage = 'Login successful!';
           errorMessage = '';
-        } else {
-          errorMessage = 'Invalid email or password.';
+        });
+        if (mounted) {
+          Navigator.of(context).pushReplacement(
+              MaterialPageRoute(builder: (context) => HomePage(user: user)));
         }
+      } else {
+        setState(
+            () => errorMessage = json['message'] ?? 'something went wrong');
       }
-    });
+    }
   }
 
   void clearFields() {

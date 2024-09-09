@@ -6,16 +6,20 @@ import 'package:tasks/model.dart';
 
 class TasksPage extends StatefulWidget {
   final User user;
-  const TasksPage({super.key, required this.user});
+  final Function() onrefresh;
+  const TasksPage({super.key, required this.user, required this.onrefresh});
 
   @override
   TasksPageState createState() => TasksPageState();
 }
 
 class TasksPageState extends State<TasksPage> {
+  late User user;
+
   @override
   void initState() {
     super.initState();
+    user = widget.user;
     fetchTasks();
   }
 
@@ -26,8 +30,8 @@ class TasksPageState extends State<TasksPage> {
     Navigator.push(
       context,
       MaterialPageRoute(
-        builder: (context) => TaskDetailPage(
-            task: task, index: index, total: widget.user.tasks.length),
+        builder: (context) =>
+            TaskDetailPage(task: task, index: index, total: user.tasks.length),
       ),
     );
   }
@@ -121,11 +125,11 @@ class TasksPageState extends State<TasksPage> {
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
                 _buildTaskStatus(
-                    "Inreview", widget.user.status.pendingTasks, Colors.grey),
+                    "Inreview", user.status.pendingTasks, Colors.grey),
                 _buildTaskStatus(
-                    "Passed", widget.user.status.passedTasks, Colors.green),
+                    "Passed", user.status.passedTasks, Colors.green),
                 _buildTaskStatus(
-                    "Failed", widget.user.status.failedTasks, Colors.redAccent),
+                    "Failed", user.status.failedTasks, Colors.redAccent),
               ],
             ),
             const SizedBox(height: 30),
@@ -136,9 +140,9 @@ class TasksPageState extends State<TasksPage> {
             const SizedBox(height: 10),
             Expanded(
               child: ListView.builder(
-                itemCount: widget.user.tasks.length,
+                itemCount: user.tasks.length,
                 itemBuilder: (context, index) {
-                  return _buildTaskCard(widget.user.tasks[index], index);
+                  return _buildTaskCard(user.tasks[index], index);
                 },
               ),
             ),

@@ -25,7 +25,7 @@ class MyAppState extends State<MyApp> {
         builder: (context, snapshot) {
           if (snapshot.connectionState == ConnectionState.waiting) {
             return const Center(child: CircularProgressIndicator());
-          } else if (snapshot.hasData) {
+          } else if (snapshot.hasData && snapshot.data!.email != '') {
             User user = snapshot.data!;
             return HomePage(user: user);
           } else {
@@ -55,7 +55,7 @@ class HomePageState extends State<HomePage> {
     user = widget.user;
   }
 
-  Future<void> updateUser() async {
+  Future<void> _updateUser() async {
     User user = await userData();
     setState(() {
       user = user;
@@ -68,9 +68,9 @@ class HomePageState extends State<HomePage> {
       body: IndexedStack(
         index: _selectedIndex,
         children: <Widget>[
-          BalancePage(user: user),
-          TasksPage(user: user),
-          UserPage(user: user),
+          BalancePage(user: user, onrefresh: _updateUser),
+          TasksPage(user: user, onrefresh: _updateUser),
+          UserPage(user: user, onrefresh: _updateUser),
         ],
       ),
       bottomNavigationBar: BottomNavigationBar(

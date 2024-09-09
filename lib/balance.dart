@@ -3,7 +3,8 @@ import 'package:tasks/model.dart';
 
 class BalancePage extends StatefulWidget {
   final User user;
-  const BalancePage({super.key, required this.user});
+  final Function() onrefresh;
+  const BalancePage({super.key, required this.user, required this.onrefresh});
 
   @override
   BalancePageState createState() => BalancePageState();
