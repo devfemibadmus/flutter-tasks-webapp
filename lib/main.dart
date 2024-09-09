@@ -56,10 +56,12 @@ class HomePageState extends State<HomePage> {
   }
 
   Future<void> _updateUser() async {
+    print(this.user.tasks.first.title);
     User user = await getUserData();
     setState(() {
-      user = user;
+      this.user = user;
     });
+    print(this.user.tasks.first.title);
   }
 
   @override
@@ -68,21 +70,21 @@ class HomePageState extends State<HomePage> {
       body: IndexedStack(
         index: _selectedIndex,
         children: <Widget>[
-          BalancePage(user: user, onrefresh: _updateUser),
-          TasksPage(user: user, onrefresh: _updateUser),
-          UserPage(user: user, onrefresh: _updateUser),
+          BalancePage(key: ValueKey(user), user: user, onrefresh: _updateUser),
+          TasksPage(key: ValueKey(user), user: user, onrefresh: _updateUser),
+          UserPage(key: ValueKey(user), user: user, onrefresh: _updateUser),
         ],
       ),
       bottomNavigationBar: BottomNavigationBar(
         selectedLabelStyle: const TextStyle(fontWeight: FontWeight.bold),
         selectedItemColor: Colors.teal.shade700,
         unselectedItemColor: Colors.grey.shade600,
-        items: const <BottomNavigationBarItem>[
-          BottomNavigationBarItem(
+        items: <BottomNavigationBarItem>[
+          const BottomNavigationBarItem(
               icon: Icon(Icons.attach_money), label: 'Balance'),
-          BottomNavigationBarItem(icon: Icon(Icons.task), label: 'Tasks'),
+          const BottomNavigationBarItem(icon: Icon(Icons.task), label: 'Tasks'),
           BottomNavigationBarItem(
-              icon: Icon(Icons.account_circle), label: 'Nigga Mike'),
+              icon: const Icon(Icons.account_circle), label: user.name),
         ],
         currentIndex: _selectedIndex,
         onTap: ((index) {
