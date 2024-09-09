@@ -79,9 +79,10 @@ class TasksPageState extends State<TasksPage> {
                   children: [
                     Text(
                       "\$${task.amount} ${task.title}",
-                      style: const TextStyle(
+                      style: TextStyle(
                         fontSize: 18,
                         fontWeight: FontWeight.bold,
+                        color: Colors.grey.shade600,
                       ),
                       overflow: TextOverflow.ellipsis,
                     ),
@@ -137,18 +138,23 @@ class TasksPageState extends State<TasksPage> {
               ],
             ),
             const SizedBox(height: 30),
-            const Text(
+            Text(
               "Today's Tasks",
-              style: TextStyle(fontSize: 22, fontWeight: FontWeight.bold),
+              style: TextStyle(
+                  fontSize: 22,
+                  fontWeight: FontWeight.bold,
+                  color: Colors.grey.shade600),
             ),
             const SizedBox(height: 10),
             Expanded(
-              child: ListView.builder(
-                itemCount: user.tasks.length,
-                itemBuilder: (context, index) {
-                  return _buildTaskCard(user.tasks[index], index);
-                },
-              ),
+              child: user.tasks.isEmpty
+                  ? const Center(child: Text("No more tasks for today"))
+                  : ListView.builder(
+                      itemCount: user.tasks.length,
+                      itemBuilder: (context, index) {
+                        return _buildTaskCard(user.tasks[index], index);
+                      },
+                    ),
             ),
           ],
         ),
@@ -256,12 +262,12 @@ class TaskDetailPageState extends State<TaskDetailPage> {
                   style: const TextStyle(fontSize: 16),
                 ),
                 const SizedBox(height: 20),
-                Container(
-                  height: 200,
-                  width: double.infinity,
-                  color: Colors.grey.shade300,
-                  child: GestureDetector(
-                    onTap: _uploadImage,
+                GestureDetector(
+                  onTap: _uploadImage,
+                  child: Container(
+                    height: 200,
+                    width: double.infinity,
+                    color: Colors.grey.shade300,
                     child: selectedImage != null
                         ? Image.network(
                             html.Url.createObjectUrl(selectedImage!))
@@ -300,9 +306,10 @@ class TaskDetailPageState extends State<TaskDetailPage> {
           ),
         if (isLoading)
           const Center(
-              child: CircularProgressIndicator(
-            color: Colors.teal,
-          )),
+            child: CircularProgressIndicator(
+              color: Colors.teal,
+            ),
+          ),
       ],
     );
   }
