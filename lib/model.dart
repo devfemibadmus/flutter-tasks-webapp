@@ -165,14 +165,37 @@ Future<String> fetchBankUser(String bankCode, String accountNumber) async {
   return name;
 }
 
-Future<User> getUserData() async {
+Future<bool> withdrawMoney(String amount) async {
+  bool withdraw = false;
+  String token = html.window.localStorage['token'] ?? '';
+  try {
+    final response = await http.post(
+      Uri.parse('http://127.0.0.1:8000/api/v1/withdraw/'),
+      headers: {"Content-Type": "application/x-www-form-urlencoded"},
+      body: {
+        "token": token,
+        "amount": amount,
+      },
+    );
+    if (response.statusCode == 200) {
+      withdraw = true;
+    } else {
+      print('Failed: ${response.statusCode}');
+    }
+  } catch (e) {
+    print('Error: $e');
+  }
+  return withdraw;
+}
+
+Future<User> getUserData(String refresh) async {
   User user = defaultUser;
   String token = html.window.localStorage['token'] ?? '';
   try {
     final response = await http.post(
       Uri.parse('http://127.0.0.1:8000/api/v1/getuser/'),
       headers: {"Content-Type": "application/x-www-form-urlencoded"},
-      body: {"token": token},
+      body: {"token": token, "refresh": refresh},
     );
     final json = jsonDecode(response.body);
     if (response.statusCode == 200) {
