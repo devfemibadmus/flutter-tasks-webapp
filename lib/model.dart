@@ -76,6 +76,40 @@ class Task {
   }
 }
 
+class History {
+  String title;
+  String description;
+
+  History({
+    required this.title,
+    required this.description,
+  });
+
+  factory History.fromJson(Map<String, dynamic> json) {
+    return History(
+      title: json['title'],
+      description: json['description'],
+    );
+  }
+}
+
+class Bank {
+  String name;
+  String code;
+
+  Bank({
+    required this.name,
+    required this.code,
+  });
+
+  factory Bank.fromJson(Map<String, dynamic> json) {
+    return Bank(
+      name: json['name'],
+      code: json['code'],
+    );
+  }
+}
+
 User defaultUser = User(
   name: '',
   tasks: [],
@@ -85,12 +119,58 @@ User defaultUser = User(
   status: Status(pendingTasks: 0, passedTasks: 0, failedTasks: 0),
 );
 
+Future<List<Bank>> fetchBanks() async {
+  List<Bank> banks = [];
+  String token = html.window.localStorage['token'] ?? '';
+  try {
+    final response = await http.post(
+      Uri.parse('http://127.0.0.1:8000/api/v1/bankList/'),
+      headers: {"Content-Type": "application/x-www-form-urlencoded"},
+      body: {"token": token},
+    );
+    final json = jsonDecode(response.body);
+    if (response.statusCode == 200) {
+      banks = List<Bank>.from(json['data'].map((bank) => Bank.fromJson(bank)));
+    } else {
+      print('Failed: ${response.statusCode}');
+    }
+  } catch (e) {
+    print('Error: $e');
+  }
+  return banks;
+}
+
+Future<String> fetchBankUser(String bankCode, String accountNumber) async {
+  String name = '';
+  String token = html.window.localStorage['token'] ?? '';
+  try {
+    final response = await http.post(
+      Uri.parse('http://127.0.0.1:8000/api/v1/bankResolve/'),
+      headers: {"Content-Type": "application/x-www-form-urlencoded"},
+      body: {
+        "token": token,
+        "bank_code": bankCode,
+        "account_number": accountNumber,
+      },
+    );
+    final json = jsonDecode(response.body);
+    if (response.statusCode == 200) {
+      name = json['data']['account_name'];
+    } else {
+      print('Failed: ${response.statusCode}');
+    }
+  } catch (e) {
+    print('Error: $e');
+  }
+  return name;
+}
+
 Future<User> getUserData() async {
   User user = defaultUser;
   String token = html.window.localStorage['token'] ?? '';
   try {
     final response = await http.post(
-      Uri.parse('http://127.0.0.1:8000/api/v1/user/'),
+      Uri.parse('http://127.0.0.1:8000/api/v1/getuser/'),
       headers: {"Content-Type": "application/x-www-form-urlencoded"},
       body: {"token": token},
     );
@@ -126,6 +206,28 @@ Future<List<Task>> getUserTasks() async {
     print('Error: $e');
   }
   return tasks;
+}
+
+Future<List<History>> getUserHistory() async {
+  List<History> history = [];
+  String token = html.window.localStorage['token'] ?? '';
+  try {
+    final response = await http.post(
+      Uri.parse('http://127.0.0.1:8000/api/v1/history/'),
+      headers: {"Content-Type": "application/x-www-form-urlencoded"},
+      body: {"token": token},
+    );
+    final data = jsonDecode(response.body);
+    if (response.statusCode == 200) {
+      history = List<History>.from(
+          data['history'].map((history) => History.fromJson(history)));
+    } else {
+      print('Failed: ${response.statusCode}');
+    }
+  } catch (e) {
+    print('Error: $e');
+  }
+  return history;
 }
 
 Future<String> submitTasks(int taskId, html.File selectedImage) async {
