@@ -21,7 +21,7 @@ class MyAppState extends State<MyApp> {
   Widget build(BuildContext context) {
     return MaterialApp(
       home: FutureBuilder<User>(
-        future: getUserData(),
+        future: getUserData("false"),
         builder: (context, snapshot) {
           if (snapshot.connectionState == ConnectionState.waiting) {
             return const Center(child: CircularProgressIndicator());
@@ -58,7 +58,7 @@ class HomePageState extends State<HomePage> {
   }
 
   Future<void> _updateUser() async {
-    User user = await getUserData();
+    User user = await getUserData("true");
     setState(() {
       this.user = user;
     });
@@ -78,7 +78,7 @@ class HomePageState extends State<HomePage> {
         index: _selectedIndex,
         children: <Widget>[
           BalancePage(
-              key: ValueKey(banks),
+              key: ValueKey([banks, user]),
               user: user,
               banks: banks,
               onrefresh: _updateUser),
