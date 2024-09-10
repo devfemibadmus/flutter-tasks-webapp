@@ -48,11 +48,13 @@ class HomePage extends StatefulWidget {
 class HomePageState extends State<HomePage> {
   int _selectedIndex = 1;
   late User user;
+  late List<Bank> banks = [];
 
   @override
   void initState() {
     super.initState();
     user = widget.user;
+    _fetchBanks();
   }
 
   Future<void> _updateUser() async {
@@ -62,13 +64,24 @@ class HomePageState extends State<HomePage> {
     });
   }
 
+  Future<void> _fetchBanks() async {
+    List<Bank> fetchedBanks = await fetchBanks();
+    setState(() {
+      banks = fetchedBanks;
+    });
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       body: IndexedStack(
         index: _selectedIndex,
         children: <Widget>[
-          BalancePage(key: ValueKey(user), user: user, onrefresh: _updateUser),
+          BalancePage(
+              key: ValueKey(banks),
+              user: user,
+              banks: banks,
+              onrefresh: _updateUser),
           TasksPage(key: ValueKey(user), user: user, onrefresh: _updateUser),
           UserPage(key: ValueKey(user), user: user, onrefresh: _updateUser),
         ],
