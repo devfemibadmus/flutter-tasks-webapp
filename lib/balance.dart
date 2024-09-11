@@ -27,11 +27,7 @@ class BalancePageState extends State<BalancePage> {
   bool isAccountError = false;
   TextEditingController accountNumber = TextEditingController(text: '');
   TextEditingController withdrawAmount = TextEditingController(text: '0.00');
-  List<Map<String, String>> historyData = [
-    {'title': 'Withdrawal 1', 'description': 'Withdrawn \$100 to Bank A'},
-    {'title': 'Withdrawal 2', 'description': 'Withdrawn \$200 to Bank B'},
-    // Add more transactions if needed or leave empty for testing empty state.
-  ];
+  late List<History> historyData = [];
 
   late User user;
   late List<Bank> banks = [];
@@ -41,6 +37,7 @@ class BalancePageState extends State<BalancePage> {
     super.initState();
     user = widget.user;
     banks = widget.banks;
+    fetchHistory();
   }
 
   void _withdrawMoney() {
@@ -70,6 +67,15 @@ class BalancePageState extends State<BalancePage> {
         isError = false;
       });
       processBalance();
+    }
+  }
+
+  Future<void> fetchHistory() async {
+    List<History> history = await getUserHistory();
+    if (mounted) {
+      setState(() {
+        historyData = history;
+      });
     }
   }
 
@@ -121,15 +127,16 @@ class BalancePageState extends State<BalancePage> {
           title: Text(title,
               style:
                   TextStyle(color: withdrawColor, fontWeight: FontWeight.bold)),
-          content: Text(body, style: TextStyle(color: withdrawColor)),
+          content: Text(body, style: TextStyle(color: Colors.grey.shade600)),
           actions: [
             TextButton(
               style: ButtonStyle(
                 overlayColor: WidgetStateProperty.all(Colors.transparent),
               ),
-              child: const Text(
+              child: Text(
                 "OK",
-                style: TextStyle(color: Colors.teal),
+                style: TextStyle(
+                    color: Colors.grey.shade600, fontWeight: FontWeight.bold),
               ),
               onPressed: () {
                 _refreshBalance();
@@ -333,23 +340,36 @@ class BalancePageState extends State<BalancePage> {
             itemCount: historyData.length,
             itemBuilder: (context, index) {
               return ListTile(
-                title: Align(
-                  alignment:
-                      Alignment.centerRight, // Align the title to the right
+                leading: SizedBox(
+                  width: 60,
                   child: Text(
-                    historyData[index]['title']!,
+                    (historyData[index].action.contains('ebit')
+                            ? '-\$'
+                            : '+\$') +
+                        historyData[index].amount,
                     style: TextStyle(
-                        fontWeight: FontWeight.bold,
-                        color: Colors.grey.shade600),
+                      fontWeight: FontWeight.bold,
+                      color: historyData[index].action.contains('pending')
+                          ? Colors.grey.shade600
+                          : (historyData[index].action.contains('ebit')
+                              ? Colors.red
+                              : Colors.teal),
+                    ),
                   ),
                 ),
-                subtitle: Align(
-                  alignment: Alignment
-                      .centerRight, // Align the description to the right
-                  child: Text(
-                    historyData[index]['description']!,
-                    style: TextStyle(color: Colors.grey.shade600),
+                title: Text(
+                  "${historyData[index].action.replaceAllMapped(
+                        RegExp(r'([a-z])([A-Z])'),
+                        (match) => '${match.group(1)} ${match.group(2)}',
+                      )} ${historyData[index].dates}",
+                  style: TextStyle(
+                    fontWeight: FontWeight.bold,
+                    color: Colors.grey.shade600,
                   ),
+                ),
+                subtitle: Text(
+                  historyData[index].description,
+                  style: TextStyle(color: Colors.grey.shade600),
                 ),
               );
             },

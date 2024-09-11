@@ -77,17 +77,23 @@ class Task {
 }
 
 class History {
-  String title;
+  String dates;
+  String action;
+  String amount;
   String description;
 
   History({
-    required this.title,
+    required this.dates,
+    required this.action,
+    required this.amount,
     required this.description,
   });
 
   factory History.fromJson(Map<String, dynamic> json) {
     return History(
-      title: json['title'],
+      dates: json['dates'],
+      action: json['action'],
+      amount: json['amount'],
       description: json['description'],
     );
   }
