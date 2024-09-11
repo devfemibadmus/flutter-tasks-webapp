@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:tasks/account.dart';
 import 'package:tasks/model.dart';
 import 'balance.dart';
+import 'dart:async';
 import 'tasks.dart';
 import 'user.dart';
 
@@ -24,7 +25,7 @@ class MyAppState extends State<MyApp> {
         future: getUserData("false"),
         builder: (context, snapshot) {
           if (snapshot.connectionState == ConnectionState.waiting) {
-            return const Center(child: CircularProgressIndicator());
+            return const LoadingWidget();
           } else if (snapshot.hasData && snapshot.data!.email != '') {
             User user = snapshot.data!;
             return HomePage(user: user);
@@ -34,6 +35,66 @@ class MyAppState extends State<MyApp> {
         },
       ),
     );
+  }
+}
+
+class LoadingWidget extends StatefulWidget {
+  const LoadingWidget({super.key});
+
+  @override
+  LoadingWidgetState createState() => LoadingWidgetState();
+}
+
+class LoadingWidgetState extends State<LoadingWidget>
+    with SingleTickerProviderStateMixin {
+  String _loadingText = "Loading";
+  int _dotCount = 0;
+  Timer? _timer;
+
+  @override
+  void initState() {
+    super.initState();
+
+    _timer = Timer.periodic(const Duration(milliseconds: 500), (Timer timer) {
+      if (mounted) {
+        setState(() {
+          _dotCount = (_dotCount + 1) % 4;
+          _loadingText = "Loading${"." * _dotCount}";
+        });
+      }
+    });
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      backgroundColor: Colors.white,
+      body: Center(
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            Image.asset(
+              'logo.png',
+              height: 250,
+            ),
+            const SizedBox(height: 20),
+            Text(
+              _loadingText,
+              style: const TextStyle(
+                fontSize: 24,
+                color: Colors.teal,
+              ),
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+
+  @override
+  void dispose() {
+    _timer?.cancel();
+    super.dispose();
   }
 }
 
