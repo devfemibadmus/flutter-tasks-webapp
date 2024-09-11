@@ -24,7 +24,9 @@ class UserPageState extends State<UserPage> {
     user = widget.user;
   }
 
-  void verifyUser() {}
+  void verifyAccount() {
+    //
+  }
 
   void selectIDFile() {
     html.FileUploadInputElement ninInput = html.FileUploadInputElement()
@@ -58,12 +60,16 @@ class UserPageState extends State<UserPage> {
     });
   }
 
-  void copyReferralLink(String referralLink) {
-    Clipboard.setData(ClipboardData(text: referralLink)).then((_) {
+  void logout() {
+    //
+  }
+
+  void copyReferralName(String referralName) {
+    Clipboard.setData(ClipboardData(text: referralName)).then((_) {
       if (mounted) {
         ScaffoldMessenger.of(context).showSnackBar(
           const SnackBar(
-            content: Text("Referral link copied to clipboard!"),
+            content: Text("Referral name copied to clipboard!"),
           ),
         );
       }
@@ -183,9 +189,9 @@ class UserPageState extends State<UserPage> {
                       borderRadius: BorderRadius.circular(12),
                     ),
                   ),
-                  onPressed: verifyUser,
+                  onPressed: verifyAccount,
                   child: const Text(
-                    "Verify User",
+                    "Verify Account",
                     style: TextStyle(fontSize: 16, color: Colors.white),
                   ),
                 ),
@@ -201,7 +207,7 @@ class UserPageState extends State<UserPage> {
             ] else ...[
               Center(
                 child: Text(
-                  "User Verified",
+                  "You're Verified",
                   style: TextStyle(
                     color: Colors.teal.shade700,
                     fontSize: 18,
@@ -217,7 +223,7 @@ class UserPageState extends State<UserPage> {
                   child: TextField(
                     cursorErrorColor: Colors.red,
                     cursorColor: Colors.grey.shade600,
-                    controller: TextEditingController(text: 'referralLink'),
+                    controller: TextEditingController(text: user.email),
                     readOnly: true,
                     decoration: InputDecoration(
                       contentPadding: const EdgeInsets.symmetric(
@@ -227,7 +233,6 @@ class UserPageState extends State<UserPage> {
                       ),
                       filled: true,
                       fillColor: Colors.teal.shade50,
-                      hintText: 'Referral link',
                       hintStyle: TextStyle(color: Colors.teal.shade400),
                     ),
                     style: TextStyle(
@@ -239,7 +244,7 @@ class UserPageState extends State<UserPage> {
                 const SizedBox(width: 8),
                 ElevatedButton(
                   onPressed: () {
-                    copyReferralLink('referralLink');
+                    copyReferralName(user.email);
                   },
                   style: ElevatedButton.styleFrom(
                     backgroundColor: Colors.teal,
@@ -264,7 +269,9 @@ class UserPageState extends State<UserPage> {
                   borderRadius: BorderRadius.circular(12),
                 ),
               ),
-              onPressed: () {},
+              onPressed: () {
+                logout();
+              },
               icon: const Icon(
                 Icons.logout,
                 color: Colors.white,
