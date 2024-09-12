@@ -12,6 +12,7 @@ class User {
   Status status;
   String? referral;
   List<Task> tasks;
+  bool documentSubmitted;
 
   User({
     required this.name,
@@ -21,6 +22,7 @@ class User {
     required this.balance,
     required this.referral,
     required this.isVerify,
+    required this.documentSubmitted,
   });
 
   factory User.fromJson(Map<String, dynamic> json) {
@@ -31,6 +33,7 @@ class User {
       isVerify: json['user']['isVerify'],
       referral: json['user']['referral'],
       status: Status.fromJson(json['status']),
+      documentSubmitted: json['user']['documentSubmitted'],
       tasks: List<Task>.from(json['tasks'].map((task) => Task.fromJson(task))),
     );
   }
@@ -119,6 +122,23 @@ class Bank {
   }
 }
 
+class Payment {
+  bool hasPaid;
+  String paymentUrl;
+
+  Payment({
+    required this.hasPaid,
+    required this.paymentUrl,
+  });
+
+  factory Payment.fromJson(Map<String, dynamic> json) {
+    return Payment(
+      hasPaid: json['hasPaid'],
+      paymentUrl: json['paymentUrl'],
+    );
+  }
+}
+
 User defaultUser = User(
   name: '',
   tasks: [],
@@ -126,6 +146,7 @@ User defaultUser = User(
   balance: 0,
   isVerify: false,
   referral: '',
+  documentSubmitted: false,
   status: Status(pendingTasks: 0, passedTasks: 0, failedTasks: 0),
 );
 
@@ -148,6 +169,27 @@ Future<List<Bank>> fetchBanks() async {
     print('Error: $e');
   }
   return banks;
+}
+
+Future<Payment> fetchPayment() async {
+  Payment payment = Payment(hasPaid: false, paymentUrl: '');
+  String token = html.window.localStorage['token'] ?? '';
+  try {
+    final response = await http.post(
+      Uri.parse('http://127.0.0.1:8000/api/v1/payment/'),
+      headers: {"Content-Type": "application/x-www-form-urlencoded"},
+      body: {"token": token},
+    );
+    final json = jsonDecode(response.body);
+    if (response.statusCode == 200) {
+      payment = Payment.fromJson(json['data']);
+    } else {
+      print('Failed: ${response.statusCode}');
+    }
+  } catch (e) {
+    print('Error: $e');
+  }
+  return payment;
 }
 
 Future<String> fetchBankUser(String bankCode, String accountNumber) async {
