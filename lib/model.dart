@@ -10,6 +10,7 @@ class User {
   String email;
   bool isVerify;
   Status status;
+  String? referral;
   List<Task> tasks;
 
   User({
@@ -18,6 +19,7 @@ class User {
     required this.status,
     required this.tasks,
     required this.balance,
+    required this.referral,
     required this.isVerify,
   });
 
@@ -27,6 +29,7 @@ class User {
       email: json['user']['email'],
       balance: json['user']['balance'],
       isVerify: json['user']['isVerify'],
+      referral: json['user']['referral'],
       status: Status.fromJson(json['status']),
       tasks: List<Task>.from(json['tasks'].map((task) => Task.fromJson(task))),
     );
@@ -122,6 +125,7 @@ User defaultUser = User(
   email: '',
   balance: 0,
   isVerify: false,
+  referral: '',
   status: Status(pendingTasks: 0, passedTasks: 0, failedTasks: 0),
 );
 
@@ -287,7 +291,8 @@ Future<String> submitTasks(int taskId, html.File selectedImage) async {
   return 'Something went wrong';
 }
 
-Future<Map<String, dynamic>> getUserLogin(String email, String password) async {
+Future<Map<String, dynamic>> getUserSignin(
+    String email, String password) async {
   Map<String, dynamic> json = {};
   try {
     final response = await http.post(
@@ -295,6 +300,28 @@ Future<Map<String, dynamic>> getUserLogin(String email, String password) async {
       headers: {"Content-Type": "application/x-www-form-urlencoded"},
       body: {
         'email': email,
+        'password': password,
+      },
+    );
+    json = jsonDecode(response.body);
+    html.window.localStorage['token'] = json['token'] ?? '';
+  } catch (e) {
+    print('Error: $e');
+  }
+  return json;
+}
+
+Future<Map<String, dynamic>> getUserSignup(
+    String fullName, String email, String referral, String password) async {
+  Map<String, dynamic> json = {};
+  try {
+    final response = await http.post(
+      Uri.parse('http://127.0.0.1:8000/api/v1/signup/'),
+      headers: {"Content-Type": "application/x-www-form-urlencoded"},
+      body: {
+        'email': email,
+        'fullName': fullName,
+        'referral': referral,
         'password': password,
       },
     );

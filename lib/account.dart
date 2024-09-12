@@ -11,10 +11,12 @@ class AccountPage extends StatefulWidget {
 
 class AccountPageState extends State<AccountPage> {
   bool isSignUp = false;
-
+  bool isLoading = false;
+  final RegExp emailRegex = RegExp(r'^[^@]+@[^@]+\.[^@]+$');
   final TextEditingController emailController = TextEditingController();
   final TextEditingController passwordController = TextEditingController();
   final TextEditingController fullNameController = TextEditingController();
+  final TextEditingController referralController = TextEditingController();
 
   String errorMessage = '';
   String successMessage = '';
@@ -51,37 +53,63 @@ class AccountPageState extends State<AccountPage> {
     );
   }
 
-  void handleSignUp() {
+  Future<void> handleSignUp() async {
     setState(() {
-      // Reset messages
+      isLoading = true;
       errorMessage = '';
       successMessage = '';
-
-      // Validation
-      if (fullNameController.text.isEmpty ||
-          emailController.text.isEmpty ||
-          passwordController.text.isEmpty) {
-        errorMessage = 'All fields are required for Sign Up.';
+    });
+    if (fullNameController.text.isEmpty ||
+        emailController.text.isEmpty ||
+        passwordController.text.isEmpty) {
+      errorMessage = 'All fields are required for Sign Up.';
+    } else if (fullNameController.text.trim().length < 5) {
+      errorMessage = 'Full name must not be less than 5 characters';
+    } else if (!emailRegex.hasMatch(emailController.text.trim())) {
+      errorMessage = 'Invalid email address';
+    } else if (passwordController.text.trim().length < 5) {
+      errorMessage = 'Password must not be less than 5 characters';
+    } else {
+      Map<String, dynamic> json = await getUserSignup(
+          fullNameController.text,
+          emailController.text,
+          referralController.text,
+          passwordController.text);
+      if (json.isNotEmpty && json['success'] == true) {
+        User user = User.fromJson(json);
+        setState(() {
+          successMessage = 'Sign Up successful!';
+          errorMessage = '';
+        });
+        if (mounted) {
+          Navigator.of(context).pushReplacement(
+              MaterialPageRoute(builder: (context) => HomePage(user: user)));
+        }
       } else {
-        // Assume success if validated. Here, you'd typically send the data to a server.
-        successMessage = 'Sign Up successful! Please sign in.';
-        clearFields();
-        toggleView(); // Switch to sign in after sign up
+        setState(
+            () => errorMessage = json['message'] ?? 'something went wrong');
       }
+    }
+    setState(() {
+      isLoading = false;
     });
   }
 
   Future<void> handleSignIn() async {
     setState(() {
+      isLoading = true;
       errorMessage = '';
       successMessage = '';
     });
 
-    if (emailController.text.isEmpty || passwordController.text.isEmpty) {
+    if (emailController.text.trim().isEmpty ||
+        passwordController.text.trim().isEmpty) {
       errorMessage = 'Email and password are required for Sign In.';
+    } else if (!emailRegex.hasMatch(emailController.text.trim())) {
+      errorMessage = 'Invalid email address';
     } else {
       Map<String, dynamic> json =
-          await getUserLogin(emailController.text, passwordController.text);
+          await getUserSignin(emailController.text, passwordController.text);
       if (json.isNotEmpty && json['success'] == true) {
         User user = User.fromJson(json);
         setState(() {
@@ -97,6 +125,9 @@ class AccountPageState extends State<AccountPage> {
             () => errorMessage = json['message'] ?? 'something went wrong');
       }
     }
+    setState(() {
+      isLoading = false;
+    });
   }
 
   void clearFields() {
@@ -107,85 +138,116 @@ class AccountPageState extends State<AccountPage> {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        title: Text(
-          isSignUp ? 'Create an account' : 'Sign in to your account',
-          style:
-              const TextStyle(color: Colors.white, fontWeight: FontWeight.bold),
-        ),
-        backgroundColor: Colors.teal,
-      ),
-      body: Container(
-        padding: const EdgeInsets.all(16.0),
-        child: SingleChildScrollView(
-          child: Column(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: [
-              const SizedBox(height: 50),
-              Image.asset('logo.png', height: 180),
-              const SizedBox(height: 50),
-              if (errorMessage.isNotEmpty)
-                Text(
-                  errorMessage,
-                  style: const TextStyle(color: Colors.red),
-                ),
-              if (successMessage.isNotEmpty)
-                Text(
-                  successMessage,
-                  style: const TextStyle(color: Colors.teal),
-                ),
-              const SizedBox(height: 20),
-              if (isSignUp) ...[
-                _buildInputField(
-                  controller: fullNameController,
-                  label: 'Full Name',
-                ),
-                const SizedBox(height: 20),
-              ],
-              _buildInputField(
-                controller: emailController,
-                label: 'Email',
+    return Stack(
+      children: [
+        Scaffold(
+          appBar: AppBar(
+            title: Text(
+              isSignUp ? 'Create an account' : 'Sign in to your account',
+              style: const TextStyle(
+                  color: Colors.white, fontWeight: FontWeight.bold),
+            ),
+            backgroundColor: Colors.teal,
+          ),
+          body: Container(
+            padding: const EdgeInsets.all(16.0),
+            child: SingleChildScrollView(
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  const SizedBox(height: 50),
+                  Image.asset('logo.png', height: 180),
+                  const SizedBox(height: 50),
+                  if (errorMessage.isNotEmpty)
+                    Text(
+                      errorMessage,
+                      style: const TextStyle(color: Colors.red),
+                    ),
+                  if (successMessage.isNotEmpty)
+                    Text(
+                      successMessage,
+                      style: const TextStyle(color: Colors.teal),
+                    ),
+                  const SizedBox(height: 20),
+                  if (isSignUp) ...[
+                    _buildInputField(
+                      controller: fullNameController,
+                      label: 'Full Name',
+                    ),
+                    const SizedBox(height: 20),
+                  ],
+                  _buildInputField(
+                    controller: emailController,
+                    label: 'Email',
+                  ),
+                  const SizedBox(height: 20),
+                  _buildInputField(
+                    controller: passwordController,
+                    label: 'Password',
+                    obscureText: true,
+                  ),
+                  const SizedBox(height: 20),
+                  if (isSignUp) ...[
+                    _buildInputField(
+                      controller: referralController,
+                      label: 'Referral email',
+                    ),
+                    const SizedBox(height: 20),
+                  ],
+                  ElevatedButton(
+                    onPressed: () {
+                      if (isSignUp) {
+                        handleSignUp();
+                      } else {
+                        handleSignIn();
+                      }
+                    },
+                    style: ElevatedButton.styleFrom(
+                      backgroundColor: Colors.teal,
+                      padding: const EdgeInsets.all(16.0),
+                    ),
+                    child: const Text(
+                      'Submit',
+                      style: TextStyle(
+                          color: Colors.white, fontWeight: FontWeight.bold),
+                    ),
+                  ),
+                  const SizedBox(height: 20),
+                  TextButton(
+                    onPressed: toggleView,
+                    style: ButtonStyle(
+                      overlayColor: WidgetStateProperty.resolveWith<Color?>(
+                        (Set<WidgetState> states) {
+                          return Colors.transparent;
+                        },
+                      ),
+                    ),
+                    child: Text(
+                      isSignUp
+                          ? 'Already have an account? Sign In'
+                          : 'Don\'t have an account? Sign Up',
+                      style: TextStyle(color: Colors.teal.shade700),
+                    ),
+                  ),
+                ],
               ),
-              const SizedBox(height: 20),
-              _buildInputField(
-                controller: passwordController,
-                label: 'Password',
-                obscureText: true,
-              ),
-              const SizedBox(height: 20),
-              ElevatedButton(
-                onPressed: () {
-                  if (isSignUp) {
-                    handleSignUp();
-                  } else {
-                    handleSignIn();
-                  }
-                },
-                style: ElevatedButton.styleFrom(
-                  backgroundColor: Colors.teal,
-                  padding: const EdgeInsets.all(16.0),
-                ),
-                child: const Text(
-                  'Submit',
-                  style: TextStyle(
-                      color: Colors.white, fontWeight: FontWeight.bold),
-                ),
-              ),
-              const SizedBox(height: 20),
-              TextButton(
-                onPressed: toggleView,
-                child: Text(
-                  isSignUp
-                      ? 'Already have an account? Sign In'
-                      : 'Don\'t have an account? Sign Up',
-                  style: TextStyle(color: Colors.teal.shade700),
-                ),
-              ),
-            ],
+            ),
           ),
         ),
-      ),
+        if (isLoading)
+          Positioned.fill(
+            child: ModalBarrier(
+              color: Colors.black.withOpacity(0.5),
+              dismissible: false,
+            ),
+          ),
+        if (isLoading)
+          const Center(
+            child: CircularProgressIndicator(
+              color: Colors.teal,
+            ),
+          ),
+      ],
     );
   }
 }
