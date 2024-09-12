@@ -74,7 +74,7 @@ class BalancePageState extends State<BalancePage> {
     List<History> history = await getUserHistory();
     if (mounted) {
       setState(() {
-        historyData = history;
+        historyData = history.reversed.toList();
       });
     }
   }

@@ -60,8 +60,14 @@ class UserPageState extends State<UserPage> {
     });
   }
 
+  Future<void> refreshUser() async {
+    await widget.onrefresh();
+  }
+
   void logout() {
-    //
+    html.window.localStorage['token'] = '';
+    Navigator.of(context)
+        .pushNamedAndRemoveUntil('/', (Route<dynamic> route) => false);
   }
 
   void copyReferralName(String referralName) {
