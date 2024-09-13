@@ -122,23 +122,6 @@ class Bank {
   }
 }
 
-class Payment {
-  bool hasPaid;
-  String paymentUrl;
-
-  Payment({
-    required this.hasPaid,
-    required this.paymentUrl,
-  });
-
-  factory Payment.fromJson(Map<String, dynamic> json) {
-    return Payment(
-      hasPaid: json['hasPaid'],
-      paymentUrl: json['paymentUrl'],
-    );
-  }
-}
-
 User defaultUser = User(
   name: '',
   tasks: [],
@@ -171,8 +154,8 @@ Future<List<Bank>> fetchBanks() async {
   return banks;
 }
 
-Future<Payment> fetchPayment() async {
-  Payment payment = Payment(hasPaid: false, paymentUrl: '');
+Future<String> fetchPayment() async {
+  String payment = '';
   String token = html.window.localStorage['token'] ?? '';
   try {
     final response = await http.post(
@@ -182,7 +165,7 @@ Future<Payment> fetchPayment() async {
     );
     final json = jsonDecode(response.body);
     if (response.statusCode == 200) {
-      payment = Payment.fromJson(json['data']);
+      payment = json['paymentUrl'];
     } else {
       print('Failed: ${response.statusCode}');
     }

@@ -99,11 +99,11 @@ class UserPageState extends State<UserPage> {
     setState(() {
       isLoading = true;
     });
-    Payment payment = await fetchPayment();
+    String payment = await fetchPayment();
     setState(() {
       isLoading = false;
     });
-    if (payment.paymentUrl.isEmpty) {
+    if (payment.isEmpty) {
       if (mounted) {
         ScaffoldMessenger.of(context).showSnackBar(
           const SnackBar(
@@ -112,7 +112,7 @@ class UserPageState extends State<UserPage> {
         );
       }
     } else {
-      html.window.open(payment.paymentUrl, '_blank');
+      html.window.open(payment, '_blank');
     }
   }
 
