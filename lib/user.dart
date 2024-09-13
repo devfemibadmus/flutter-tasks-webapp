@@ -30,7 +30,15 @@ class UserPageState extends State<UserPage> {
   }
 
   Future<void> verifyAccount() async {
-    if (govIdFile == null || studentIdFile == null) {
+    if (!user.hasPaid) {
+      if (mounted) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          const SnackBar(
+            content: Text("Verification fee is required."),
+          ),
+        );
+      }
+    } else if (govIdFile == null || studentIdFile == null) {
       if (mounted) {
         ScaffoldMessenger.of(context).showSnackBar(
           const SnackBar(
@@ -38,9 +46,9 @@ class UserPageState extends State<UserPage> {
           ),
         );
       }
-      return;
+    } else {
+      //
     }
-    //
   }
 
   void selectIDFile() {
@@ -112,7 +120,7 @@ class UserPageState extends State<UserPage> {
         );
       }
     } else {
-      html.window.open(payment, '_blank');
+      html.window.open(payment, '_self');
     }
   }
 
@@ -432,10 +440,14 @@ class UserPageState extends State<UserPage> {
             ),
           ),
           child: Checkbox(
-            value: false,
-            onChanged: ((value) {
-              getPayment();
-            }),
+            fillColor:
+                user.hasPaid ? const WidgetStatePropertyAll(Colors.teal) : null,
+            value: user.hasPaid,
+            onChanged: !user.hasPaid
+                ? ((value) {
+                    getPayment();
+                  })
+                : null,
           ),
         ),
         Expanded(

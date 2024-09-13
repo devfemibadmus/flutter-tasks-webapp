@@ -9,6 +9,7 @@ class User {
   String name;
   String email;
   bool isVerify;
+  bool hasPaid;
   Status status;
   String? referral;
   List<Task> tasks;
@@ -21,6 +22,7 @@ class User {
     required this.tasks,
     required this.balance,
     required this.referral,
+    required this.hasPaid,
     required this.isVerify,
     required this.documentSubmitted,
   });
@@ -31,6 +33,7 @@ class User {
       email: json['user']['email'],
       balance: json['user']['balance'],
       isVerify: json['user']['isVerify'],
+      hasPaid: json['user']['hasPaid'],
       referral: json['user']['referral'],
       status: Status.fromJson(json['status']),
       documentSubmitted: json['user']['documentSubmitted'],
@@ -129,6 +132,7 @@ User defaultUser = User(
   balance: 0,
   isVerify: false,
   referral: '',
+  hasPaid: false,
   documentSubmitted: false,
   status: Status(pendingTasks: 0, passedTasks: 0, failedTasks: 0),
 );
