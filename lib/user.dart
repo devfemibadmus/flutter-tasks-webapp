@@ -30,6 +30,9 @@ class UserPageState extends State<UserPage> {
   }
 
   Future<void> verifyAccount() async {
+    setState(() {
+      isLoading = true;
+    });
     if (!user.hasPaid) {
       if (mounted) {
         ScaffoldMessenger.of(context).showSnackBar(
@@ -47,8 +50,19 @@ class UserPageState extends State<UserPage> {
         );
       }
     } else {
-      //
+      String message = await verifyAccountDocs(govIdFile!, studentIdFile!);
+      if (mounted) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(
+            content: Text(message),
+          ),
+        );
+      }
+      refreshUser();
     }
+    setState(() {
+      isLoading = false;
+    });
   }
 
   void selectIDFile() {

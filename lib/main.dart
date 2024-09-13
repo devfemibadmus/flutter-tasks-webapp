@@ -110,6 +110,7 @@ class HomePageState extends State<HomePage> {
   int _selectedIndex = 1;
   late User user;
   late List<Bank> banks = [];
+  bool isLoading = false;
 
   @override
   void initState() {
@@ -119,9 +120,13 @@ class HomePageState extends State<HomePage> {
   }
 
   Future<void> _updateUser() async {
+    setState(() {
+      isLoading = true;
+    });
     User user = await getUserData("true");
     setState(() {
       this.user = user;
+      isLoading = false;
     });
   }
 
@@ -134,37 +139,56 @@ class HomePageState extends State<HomePage> {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      body: IndexedStack(
-        index: _selectedIndex,
-        children: <Widget>[
-          BalancePage(
-              key: ValueKey([banks, user]),
-              user: user,
-              banks: banks,
-              onrefresh: _updateUser),
-          TasksPage(key: ValueKey(user), user: user, onrefresh: _updateUser),
-          UserPage(key: ValueKey(user), user: user, onrefresh: _updateUser),
-        ],
-      ),
-      bottomNavigationBar: BottomNavigationBar(
-        selectedLabelStyle: const TextStyle(fontWeight: FontWeight.bold),
-        selectedItemColor: Colors.teal.shade700,
-        unselectedItemColor: Colors.grey.shade600,
-        items: <BottomNavigationBarItem>[
-          const BottomNavigationBarItem(
-              icon: Icon(Icons.attach_money), label: 'Balance'),
-          const BottomNavigationBarItem(icon: Icon(Icons.task), label: 'Tasks'),
-          BottomNavigationBarItem(
-              icon: const Icon(Icons.account_circle), label: user.name),
-        ],
-        currentIndex: _selectedIndex,
-        onTap: ((index) {
-          setState(() {
-            _selectedIndex = index;
-          });
-        }),
-      ),
+    return Stack(
+      children: [
+        Scaffold(
+          body: IndexedStack(
+            index: _selectedIndex,
+            children: <Widget>[
+              BalancePage(
+                  key: ValueKey([banks, user]),
+                  user: user,
+                  banks: banks,
+                  onrefresh: _updateUser),
+              TasksPage(
+                  key: ValueKey(user), user: user, onrefresh: _updateUser),
+              UserPage(key: ValueKey(user), user: user, onrefresh: _updateUser),
+            ],
+          ),
+          bottomNavigationBar: BottomNavigationBar(
+            selectedLabelStyle: const TextStyle(fontWeight: FontWeight.bold),
+            selectedItemColor: Colors.teal.shade700,
+            unselectedItemColor: Colors.grey.shade600,
+            items: <BottomNavigationBarItem>[
+              const BottomNavigationBarItem(
+                  icon: Icon(Icons.attach_money), label: 'Balance'),
+              const BottomNavigationBarItem(
+                  icon: Icon(Icons.task), label: 'Tasks'),
+              BottomNavigationBarItem(
+                  icon: const Icon(Icons.account_circle), label: user.name),
+            ],
+            currentIndex: _selectedIndex,
+            onTap: ((index) {
+              setState(() {
+                _selectedIndex = index;
+              });
+            }),
+          ),
+        ),
+        if (isLoading)
+          Positioned.fill(
+            child: ModalBarrier(
+              color: Colors.black.withOpacity(0.5),
+              dismissible: false,
+            ),
+          ),
+        if (isLoading)
+          const Center(
+            child: CircularProgressIndicator(
+              color: Colors.teal,
+            ),
+          ),
+      ],
     );
   }
 }

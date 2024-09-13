@@ -320,6 +320,46 @@ Future<String> submitTasks(int taskId, html.File selectedImage) async {
   return 'Something went wrong';
 }
 
+Future<String> verifyAccountDocs(
+    html.File studentIdFile, html.File govIdFile) async {
+  String token = html.window.localStorage['token'] ?? '';
+  try {
+    var uri = Uri.parse('http://127.0.0.1:8000/api/v1/verification/');
+    var request = http.MultipartRequest('POST', uri);
+    request.fields['token'] = token;
+
+    var govIdReader = html.FileReader();
+    govIdReader.readAsArrayBuffer(govIdFile);
+    await govIdReader.onLoad.first;
+    var govIdFileBytes = govIdReader.result as List<int>;
+    var govIdMultipartFile = http.MultipartFile.fromBytes(
+      'govId',
+      govIdFileBytes,
+      filename: govIdFile.name,
+    );
+    request.files.add(govIdMultipartFile);
+
+    var studentIdReader = html.FileReader();
+    studentIdReader.readAsArrayBuffer(studentIdFile);
+    await studentIdReader.onLoad.first;
+    var studentIdFileBytes = studentIdReader.result as List<int>;
+    var studentIdMultipartFile = http.MultipartFile.fromBytes(
+      'studentId',
+      studentIdFileBytes,
+      filename: studentIdFile.name,
+    );
+    request.files.add(studentIdMultipartFile);
+
+    var response = await request.send();
+    var responseBody = await response.stream.bytesToString();
+    final data = jsonDecode(responseBody);
+    return data['message'];
+  } catch (e) {
+    print('Error: $e');
+  }
+  return 'Something went wrong';
+}
+
 Future<Map<String, dynamic>> getUserSignin(
     String email, String password) async {
   Map<String, dynamic> json = {};
