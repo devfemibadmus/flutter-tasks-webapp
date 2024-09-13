@@ -227,14 +227,14 @@ Future<bool> withdrawMoney(String amount) async {
   return withdraw;
 }
 
-Future<User> getUserData(String refresh) async {
+Future<User> getUserData(bool refresh) async {
   User user = defaultUser;
   String token = html.window.localStorage['token'] ?? '';
   try {
     final response = await http.post(
       Uri.parse('http://127.0.0.1:8000/api/v1/getuser/'),
       headers: {"Content-Type": "application/x-www-form-urlencoded"},
-      body: {"token": token, "refresh": refresh},
+      body: {"token": token, "refresh": refresh.toString()},
     );
     final json = jsonDecode(response.body);
     if (response.statusCode == 200) {

@@ -144,8 +144,7 @@ class UserPageState extends State<UserPage> {
 
   void logout() {
     html.window.localStorage['token'] = '';
-    Navigator.of(context)
-        .pushNamedAndRemoveUntil('/', (Route<dynamic> route) => false);
+    html.window.location.reload();
   }
 
   void copyReferralName(String referralName) {

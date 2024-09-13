@@ -22,7 +22,7 @@ class MyAppState extends State<MyApp> {
   Widget build(BuildContext context) {
     return MaterialApp(
       home: FutureBuilder<User>(
-        future: getUserData("false"),
+        future: getUserData(false),
         builder: (context, snapshot) {
           if (snapshot.connectionState == ConnectionState.waiting) {
             return const LoadingWidget();
@@ -54,7 +54,6 @@ class LoadingWidgetState extends State<LoadingWidget>
   @override
   void initState() {
     super.initState();
-
     _timer = Timer.periodic(const Duration(milliseconds: 500), (Timer timer) {
       if (mounted) {
         setState(() {
@@ -123,7 +122,7 @@ class HomePageState extends State<HomePage> {
     setState(() {
       isLoading = true;
     });
-    User user = await getUserData("true");
+    User user = await getUserData(true);
     setState(() {
       this.user = user;
       isLoading = false;
