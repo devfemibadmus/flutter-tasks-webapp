@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html>
 <head>
-  <base href="$FLUTTER_BASE_HREF">
+  <base href="/static/">
   <meta charset="UTF-8">
   <meta content="IE=Edge" http-equiv="X-UA-Compatible">
   <meta name="description" content="A new Flutter project.">
@@ -19,16 +19,20 @@
   <div class="loading-container">
     <img src="logo.png" alt="Logo" class="logo">
     <div class="loading-text">Loading<span class="dots"></span></div>
-</div>
+  </div>
     <script>
       window.addEventListener('load', function(ev) {
         _flutter.loader.load({
           serviceWorker: {
-            serviceWorkerVersion: serviceWorkerVersion,
+            serviceWorkerVersion: null,
           },
           onEntrypointLoaded: async function(engineInitializer) {
             let appRunner = await engineInitializer.initializeEngine();
             await appRunner.runApp();
+            const loadingContainer = document.querySelector('.loading-container');
+            if (loadingContainer) {
+              loadingContainer.style.display = 'none';
+            }
           }
         });
       });

@@ -1,4 +1,6 @@
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:tasks/account.dart';
 import 'package:tasks/model.dart';
 import 'balance.dart';
@@ -7,7 +9,37 @@ import 'tasks.dart';
 import 'user.dart';
 
 void main() {
-  runApp(const MyApp());
+  WidgetsFlutterBinding.ensureInitialized();
+  SystemChrome.setPreferredOrientations([
+    DeviceOrientation.portraitUp,
+  ]);
+  final mobileView = mobileViews(
+    isWeb: kIsWeb,
+    webAppWidth: 480.0,
+    app: const MyApp(),
+  );
+  runApp(mobileView);
+}
+
+Widget mobileViews({
+  required bool isWeb,
+  required double webAppWidth,
+  required Widget app,
+}) {
+  if (!isWeb) {
+    return app;
+  }
+  return Container(
+    color: Colors.black,
+    child: Center(
+      child: ClipRect(
+        child: SizedBox(
+          width: webAppWidth,
+          child: app,
+        ),
+      ),
+    ),
+  );
 }
 
 class MyApp extends StatefulWidget {

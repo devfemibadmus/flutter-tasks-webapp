@@ -402,4 +402,4 @@ Future<Map<String, dynamic>> getUserSignup(
   return json;
 }
 
-String baseUrl = 'http://127.0.0.1:8000';
+String baseUrl = html.window.location.origin;
