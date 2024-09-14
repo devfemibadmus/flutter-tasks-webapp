@@ -142,7 +142,7 @@ Future<List<Bank>> fetchBanks() async {
   String token = html.window.localStorage['token'] ?? '';
   try {
     final response = await http.post(
-      Uri.parse('http://127.0.0.1:8000/api/v1/bankList/'),
+      Uri.parse('$baseUrl/api/v1/bankList/'),
       headers: {"Content-Type": "application/x-www-form-urlencoded"},
       body: {"token": token},
     );
@@ -150,10 +150,10 @@ Future<List<Bank>> fetchBanks() async {
     if (response.statusCode == 200) {
       banks = List<Bank>.from(json['data'].map((bank) => Bank.fromJson(bank)));
     } else {
-      print('Failed: ${response.statusCode}');
+      // print('Failed: ${response.statusCode}');
     }
   } catch (e) {
-    print('Error: $e');
+    // print('Error: $e');
   }
   return banks;
 }
@@ -163,7 +163,7 @@ Future<String> fetchPayment() async {
   String token = html.window.localStorage['token'] ?? '';
   try {
     final response = await http.post(
-      Uri.parse('http://127.0.0.1:8000/api/v1/payment/'),
+      Uri.parse('$baseUrl/api/v1/payment/'),
       headers: {"Content-Type": "application/x-www-form-urlencoded"},
       body: {"token": token},
     );
@@ -171,10 +171,10 @@ Future<String> fetchPayment() async {
     if (response.statusCode == 200) {
       payment = json['paymentUrl'];
     } else {
-      print('Failed: ${response.statusCode}');
+      // print('Failed: ${response.statusCode}');
     }
   } catch (e) {
-    print('Error: $e');
+    // print('Error: $e');
   }
   return payment;
 }
@@ -184,7 +184,7 @@ Future<String> fetchBankUser(String bankCode, String accountNumber) async {
   String token = html.window.localStorage['token'] ?? '';
   try {
     final response = await http.post(
-      Uri.parse('http://127.0.0.1:8000/api/v1/bankResolve/'),
+      Uri.parse('$baseUrl/api/v1/bankResolve/'),
       headers: {"Content-Type": "application/x-www-form-urlencoded"},
       body: {
         "token": token,
@@ -196,10 +196,10 @@ Future<String> fetchBankUser(String bankCode, String accountNumber) async {
     if (response.statusCode == 200) {
       name = json['data']['account_name'];
     } else {
-      print('Failed: ${response.statusCode}');
+      // print('Failed: ${response.statusCode}');
     }
   } catch (e) {
-    print('Error: $e');
+    // print('Error: $e');
   }
   return name;
 }
@@ -209,7 +209,7 @@ Future<bool> withdrawMoney(String amount) async {
   String token = html.window.localStorage['token'] ?? '';
   try {
     final response = await http.post(
-      Uri.parse('http://127.0.0.1:8000/api/v1/withdraw/'),
+      Uri.parse('$baseUrl/api/v1/withdraw/'),
       headers: {"Content-Type": "application/x-www-form-urlencoded"},
       body: {
         "token": token,
@@ -219,10 +219,10 @@ Future<bool> withdrawMoney(String amount) async {
     if (response.statusCode == 200) {
       withdraw = true;
     } else {
-      print('Failed: ${response.statusCode}');
+      // print('Failed: ${response.statusCode}');
     }
   } catch (e) {
-    print('Error: $e');
+    // print('Error: $e');
   }
   return withdraw;
 }
@@ -232,7 +232,7 @@ Future<User> getUserData(bool refresh) async {
   String token = html.window.localStorage['token'] ?? '';
   try {
     final response = await http.post(
-      Uri.parse('http://127.0.0.1:8000/api/v1/getuser/'),
+      Uri.parse('$baseUrl/api/v1/getuser/'),
       headers: {"Content-Type": "application/x-www-form-urlencoded"},
       body: {"token": token, "refresh": refresh.toString()},
     );
@@ -241,10 +241,10 @@ Future<User> getUserData(bool refresh) async {
       user = User.fromJson(json);
       html.window.localStorage['token'] = json['token'] ?? '';
     } else {
-      print('Failed: ${response.statusCode}');
+      // print('Failed: ${response.statusCode}');
     }
   } catch (e) {
-    print('Error: $e');
+    // print('Error: $e');
   }
   return user;
 }
@@ -254,7 +254,7 @@ Future<List<Task>> getUserTasks() async {
   String token = html.window.localStorage['token'] ?? '';
   try {
     final response = await http.post(
-      Uri.parse('http://127.0.0.1:8000/api/v1/tasks/'),
+      Uri.parse('$baseUrl/api/v1/tasks/'),
       headers: {"Content-Type": "application/x-www-form-urlencoded"},
       body: {"token": token},
     );
@@ -262,10 +262,10 @@ Future<List<Task>> getUserTasks() async {
     if (response.statusCode == 200) {
       tasks = List<Task>.from(data['tasks'].map((task) => Task.fromJson(task)));
     } else {
-      print('Failed: ${response.statusCode}');
+      // print('Failed: ${response.statusCode}');
     }
   } catch (e) {
-    print('Error: $e');
+    // print('Error: $e');
   }
   return tasks;
 }
@@ -275,7 +275,7 @@ Future<List<History>> getUserHistory() async {
   String token = html.window.localStorage['token'] ?? '';
   try {
     final response = await http.post(
-      Uri.parse('http://127.0.0.1:8000/api/v1/history/'),
+      Uri.parse('$baseUrl/api/v1/history/'),
       headers: {"Content-Type": "application/x-www-form-urlencoded"},
       body: {"token": token},
     );
@@ -284,10 +284,10 @@ Future<List<History>> getUserHistory() async {
       history = List<History>.from(
           data['history'].map((history) => History.fromJson(history)));
     } else {
-      print('Failed: ${response.statusCode}');
+      // print('Failed: ${response.statusCode}');
     }
   } catch (e) {
-    print('Error: $e');
+    // print('Error: $e');
   }
   return history;
 }
@@ -295,7 +295,7 @@ Future<List<History>> getUserHistory() async {
 Future<String> submitTasks(int taskId, html.File selectedImage) async {
   String token = html.window.localStorage['token'] ?? '';
   try {
-    var uri = Uri.parse('http://127.0.0.1:8000/api/v1/submit/');
+    var uri = Uri.parse('$baseUrl/api/v1/submit/');
     var request = http.MultipartRequest('POST', uri);
     request.fields['token'] = token;
     request.fields['taskId'] = taskId.toString();
@@ -315,7 +315,7 @@ Future<String> submitTasks(int taskId, html.File selectedImage) async {
     final data = jsonDecode(responseBody);
     return data['message'];
   } catch (e) {
-    print('Error: $e');
+    // print('Error: $e');
   }
   return 'Something went wrong';
 }
@@ -324,7 +324,7 @@ Future<String> verifyAccountDocs(
     html.File studentIdFile, html.File govIdFile) async {
   String token = html.window.localStorage['token'] ?? '';
   try {
-    var uri = Uri.parse('http://127.0.0.1:8000/api/v1/verification/');
+    var uri = Uri.parse('$baseUrl/api/v1/verification/');
     var request = http.MultipartRequest('POST', uri);
     request.fields['token'] = token;
 
@@ -355,7 +355,7 @@ Future<String> verifyAccountDocs(
     final data = jsonDecode(responseBody);
     return data['message'];
   } catch (e) {
-    print('Error: $e');
+    // print('Error: $e');
   }
   return 'Something went wrong';
 }
@@ -365,7 +365,7 @@ Future<Map<String, dynamic>> getUserSignin(
   Map<String, dynamic> json = {};
   try {
     final response = await http.post(
-      Uri.parse('http://127.0.0.1:8000/api/v1/signin/'),
+      Uri.parse('$baseUrl/api/v1/signin/'),
       headers: {"Content-Type": "application/x-www-form-urlencoded"},
       body: {
         'email': email,
@@ -375,7 +375,7 @@ Future<Map<String, dynamic>> getUserSignin(
     json = jsonDecode(response.body);
     html.window.localStorage['token'] = json['token'] ?? '';
   } catch (e) {
-    print('Error: $e');
+    // print('Error: $e');
   }
   return json;
 }
@@ -385,7 +385,7 @@ Future<Map<String, dynamic>> getUserSignup(
   Map<String, dynamic> json = {};
   try {
     final response = await http.post(
-      Uri.parse('http://127.0.0.1:8000/api/v1/signup/'),
+      Uri.parse('$baseUrl/api/v1/signup/'),
       headers: {"Content-Type": "application/x-www-form-urlencoded"},
       body: {
         'email': email,
@@ -397,7 +397,9 @@ Future<Map<String, dynamic>> getUserSignup(
     json = jsonDecode(response.body);
     html.window.localStorage['token'] = json['token'] ?? '';
   } catch (e) {
-    print('Error: $e');
+    // print('Error: $e');
   }
   return json;
 }
+
+String baseUrl = 'http://127.0.0.1:8000';

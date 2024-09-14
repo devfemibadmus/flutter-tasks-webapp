@@ -16,9 +16,10 @@
 </head>
 <body>
   <script src="flutter_bootstrap.js" async></script>
-  <div id="loading">
+  <div class="loading-container">
     <img src="logo.png" alt="Logo" class="logo">
-  </div>
+    <div class="loading-text">Loading<span class="dots"></span></div>
+</div>
     <script>
       window.addEventListener('load', function(ev) {
         _flutter.loader.load({
