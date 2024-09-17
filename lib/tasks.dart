@@ -129,12 +129,9 @@ class TasksPageState extends State<TasksPage> {
             Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
-                _buildTaskStatus(
-                    "Inreview", user.status.pendingTasks, Colors.grey),
-                _buildTaskStatus(
-                    "Passed", user.status.passedTasks, Colors.green),
-                _buildTaskStatus(
-                    "Failed", user.status.failedTasks, Colors.redAccent),
+                _buildTaskStatus("Inreview", user.pendingTasks, Colors.grey),
+                _buildTaskStatus("Passed", user.passedTasks, Colors.green),
+                _buildTaskStatus("Failed", user.failedTasks, Colors.redAccent),
               ],
             ),
             const SizedBox(height: 30),

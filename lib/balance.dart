@@ -27,7 +27,7 @@ class BalancePageState extends State<BalancePage> {
   bool isAccountError = false;
   TextEditingController accountNumber = TextEditingController(text: '');
   TextEditingController withdrawAmount = TextEditingController(text: '0.00');
-  late List<History> historyData = [];
+  late List<PayOut> payoutsData = [];
 
   late User user;
   late List<Bank> banks = [];
@@ -37,7 +37,7 @@ class BalancePageState extends State<BalancePage> {
     super.initState();
     user = widget.user;
     banks = widget.banks;
-    fetchHistory();
+    fetchPayOut();
   }
 
   void _withdrawMoney() {
@@ -46,6 +46,11 @@ class BalancePageState extends State<BalancePage> {
       setState(() {
         isError = true;
         isErrorMessage = 'Please enter a valid acount number';
+      });
+    } else if (accountName.isEmpty) {
+      setState(() {
+        isError = true;
+        isErrorMessage = '404 account not found';
       });
     } else if (accountName == 'Loading...') {
       setState(() {
@@ -70,11 +75,11 @@ class BalancePageState extends State<BalancePage> {
     }
   }
 
-  Future<void> fetchHistory() async {
-    List<History> history = await getUserHistory();
+  Future<void> fetchPayOut() async {
+    List<PayOut> payouts = await getUserPayOut();
     if (mounted) {
       setState(() {
-        historyData = history.reversed.toList();
+        payoutsData = payouts.reversed.toList();
       });
     }
   }
@@ -152,7 +157,7 @@ class BalancePageState extends State<BalancePage> {
   @override
   Widget build(BuildContext context) {
     return DefaultTabController(
-      length: 2, // Two tabs: Balance and History
+      length: 2, // Two tabs: Balance and PayOut
       child: Scaffold(
         appBar: AppBar(
           title: Text(
@@ -166,7 +171,7 @@ class BalancePageState extends State<BalancePage> {
           bottom: TabBar(
             tabs: const [
               Tab(text: 'Balance'),
-              Tab(text: 'History'),
+              Tab(text: 'PayOut'),
             ],
             labelStyle: const TextStyle(
               fontWeight: FontWeight.bold,
@@ -180,7 +185,7 @@ class BalancePageState extends State<BalancePage> {
         body: TabBarView(
           children: [
             buildBalanceTab(),
-            buildHistoryTab(),
+            buildPayOutTab(),
           ],
         ),
       ),
@@ -333,42 +338,42 @@ class BalancePageState extends State<BalancePage> {
     );
   }
 
-  Widget buildHistoryTab() {
-    return historyData.isNotEmpty
+  Widget buildPayOutTab() {
+    return payoutsData.isNotEmpty
         ? ListView.builder(
             padding: const EdgeInsets.all(16),
-            itemCount: historyData.length,
+            itemCount: payoutsData.length,
             itemBuilder: (context, index) {
               return ListTile(
                 leading: SizedBox(
                   width: 60,
                   child: Text(
-                    (historyData[index].action.contains('ebit')
+                    (payoutsData[index].action.contains('ebit')
                             ? '-\$'
                             : '+\$') +
-                        historyData[index].amount,
+                        payoutsData[index].amount,
                     style: TextStyle(
                       fontWeight: FontWeight.bold,
-                      color: historyData[index].action.contains('pending')
+                      color: payoutsData[index].action.contains('pending')
                           ? Colors.grey.shade600
-                          : (historyData[index].action.contains('ebit')
+                          : (payoutsData[index].action.contains('ebit')
                               ? Colors.red
                               : Colors.teal),
                     ),
                   ),
                 ),
                 title: Text(
-                  "${historyData[index].action.replaceAllMapped(
+                  "${payoutsData[index].action.replaceAllMapped(
                         RegExp(r'([a-z])([A-Z])'),
                         (match) => '${match.group(1)} ${match.group(2)}',
-                      )} ${historyData[index].dates}",
+                      )} ${payoutsData[index].dates}",
                   style: TextStyle(
                     fontWeight: FontWeight.bold,
                     color: Colors.grey.shade600,
                   ),
                 ),
                 subtitle: Text(
-                  historyData[index].description,
+                  payoutsData[index].description,
                   style: TextStyle(color: Colors.grey.shade600),
                 ),
               );
@@ -376,7 +381,7 @@ class BalancePageState extends State<BalancePage> {
           )
         : const Center(
             child: Text(
-              'No history available',
+              'No payouts available',
               style: TextStyle(fontSize: 18, color: Colors.grey),
             ),
           );

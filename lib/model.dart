@@ -10,7 +10,9 @@ class User {
   String email;
   bool isVerify;
   bool hasPaid;
-  Status status;
+  int passedTasks;
+  int failedTasks;
+  int pendingTasks;
   String? referral;
   List<Task> tasks;
   bool documentSubmitted;
@@ -18,12 +20,14 @@ class User {
   User({
     required this.name,
     required this.email,
-    required this.status,
     required this.tasks,
     required this.balance,
     required this.referral,
     required this.hasPaid,
     required this.isVerify,
+    required this.passedTasks,
+    required this.failedTasks,
+    required this.pendingTasks,
     required this.documentSubmitted,
   });
 
@@ -34,30 +38,12 @@ class User {
       balance: json['user']['balance'],
       isVerify: json['user']['isVerify'],
       hasPaid: json['user']['hasPaid'],
-      referral: json['user']['referral'],
-      status: Status.fromJson(json['status']),
-      documentSubmitted: json['user']['documentSubmitted'],
-      tasks: List<Task>.from(json['tasks'].map((task) => Task.fromJson(task))),
-    );
-  }
-}
-
-class Status {
-  int pendingTasks;
-  int passedTasks;
-  int failedTasks;
-
-  Status({
-    required this.pendingTasks,
-    required this.passedTasks,
-    required this.failedTasks,
-  });
-
-  factory Status.fromJson(Map<String, dynamic> json) {
-    return Status(
-      pendingTasks: json['pendingTasks'],
       passedTasks: json['passedTasks'],
       failedTasks: json['failedTasks'],
+      pendingTasks: json['pendingTasks'],
+      referral: json['user']['referral'],
+      documentSubmitted: json['user']['documentSubmitted'],
+      tasks: List<Task>.from(json['tasks'].map((task) => Task.fromJson(task))),
     );
   }
 }
@@ -85,21 +71,21 @@ class Task {
   }
 }
 
-class History {
+class PayOut {
   String dates;
   String action;
   String amount;
   String description;
 
-  History({
+  PayOut({
     required this.dates,
     required this.action,
     required this.amount,
     required this.description,
   });
 
-  factory History.fromJson(Map<String, dynamic> json) {
-    return History(
+  factory PayOut.fromJson(Map<String, dynamic> json) {
+    return PayOut(
       dates: json['dates'],
       action: json['action'],
       amount: json['amount'],
@@ -134,7 +120,9 @@ User defaultUser = User(
   referral: '',
   hasPaid: false,
   documentSubmitted: false,
-  status: Status(pendingTasks: 0, passedTasks: 0, failedTasks: 0),
+  passedTasks: 0,
+  failedTasks: 0,
+  pendingTasks: 0,
 );
 
 Future<List<Bank>> fetchBanks() async {
@@ -270,26 +258,26 @@ Future<List<Task>> getUserTasks() async {
   return tasks;
 }
 
-Future<List<History>> getUserHistory() async {
-  List<History> history = [];
+Future<List<PayOut>> getUserPayOut() async {
+  List<PayOut> payouts = [];
   String token = html.window.localStorage['token'] ?? '';
   try {
     final response = await http.post(
-      Uri.parse('$baseUrl/api/v1/history/'),
+      Uri.parse('$baseUrl/api/v1/payouts/'),
       headers: {"Content-Type": "application/x-www-form-urlencoded"},
       body: {"token": token},
     );
     final data = jsonDecode(response.body);
     if (response.statusCode == 200) {
-      history = List<History>.from(
-          data['history'].map((history) => History.fromJson(history)));
+      payouts = List<PayOut>.from(
+          data['payouts'].map((payouts) => PayOut.fromJson(payouts)));
     } else {
       // print('Failed: ${response.statusCode}');
     }
   } catch (e) {
     // print('Error: $e');
   }
-  return history;
+  return payouts;
 }
 
 Future<String> submitTasks(int taskId, html.File selectedImage) async {
