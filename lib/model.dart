@@ -38,10 +38,10 @@ class User {
       balance: json['user']['balance'],
       isVerify: json['user']['isVerify'],
       hasPaid: json['user']['hasPaid'],
-      passedTasks: json['passedTasks'],
-      failedTasks: json['failedTasks'],
-      pendingTasks: json['pendingTasks'],
       referral: json['user']['referral'],
+      passedTasks: json['user']['passedTasks'],
+      failedTasks: json['user']['failedTasks'],
+      pendingTasks: json['user']['pendingTasks'],
       documentSubmitted: json['user']['documentSubmitted'],
       tasks: List<Task>.from(json['tasks'].map((task) => Task.fromJson(task))),
     );
