@@ -10,6 +10,8 @@ class User {
   String email;
   bool isVerify;
   bool hasPaid;
+  double rearns;
+  int minWithdraw;
   int passedTasks;
   int failedTasks;
   int pendingTasks;
@@ -24,6 +26,8 @@ class User {
     required this.balance,
     required this.referral,
     required this.hasPaid,
+    required this.rearns,
+    required this.minWithdraw,
     required this.isVerify,
     required this.passedTasks,
     required this.failedTasks,
@@ -37,11 +41,13 @@ class User {
       email: json['user']['email'],
       balance: json['user']['balance'],
       isVerify: json['user']['isVerify'],
+      rearns: json['user']['rearns'],
       hasPaid: json['user']['hasPaid'],
       referral: json['user']['referral'],
       passedTasks: json['user']['passedTasks'],
       failedTasks: json['user']['failedTasks'],
       pendingTasks: json['user']['pendingTasks'],
+      minWithdraw: json['user']['minWithdraw'],
       documentSubmitted: json['user']['documentSubmitted'],
       tasks: List<Task>.from(json['tasks'].map((task) => Task.fromJson(task))),
     );
@@ -123,6 +129,8 @@ User defaultUser = User(
   passedTasks: 0,
   failedTasks: 0,
   pendingTasks: 0,
+  rearns: 0,
+  minWithdraw: 0,
 );
 
 Future<List<Bank>> fetchBanks() async {

@@ -19,14 +19,13 @@ class BalancePage extends StatefulWidget {
 
 class BalancePageState extends State<BalancePage> {
   String? selectedBank;
-  final double minimumWithdraw = 100.00;
   String isErrorMessage = '';
   String accountName = '';
   bool isLoading = false;
   bool isError = false;
   bool isAccountError = false;
   TextEditingController accountNumber = TextEditingController(text: '');
-  TextEditingController withdrawAmount = TextEditingController(text: '0.00');
+  TextEditingController withdrawAmount = TextEditingController(text: '');
   late List<PayOut> payoutsData = [];
 
   late User user;
@@ -57,12 +56,17 @@ class BalancePageState extends State<BalancePage> {
         isError = true;
         isErrorMessage = 'Please hold while we verify account';
       });
-    } else if (minimumWithdraw > double.parse(withdrawAmount.value.text)) {
+    } else if (withdrawAmount.value.text.isEmpty) {
       setState(() {
         isError = true;
-        isErrorMessage = 'Minimum withdrawal is \$$minimumWithdraw';
+        isErrorMessage = 'Please enter a valid amount to withdraw';
       });
-    } else if (double.parse(withdrawAmount.value.text) > user.balance) {
+    } else if (user.minWithdraw > int.parse(withdrawAmount.value.text)) {
+      setState(() {
+        isError = true;
+        isErrorMessage = 'Minimum withdrawal is \$${user.minWithdraw}';
+      });
+    } else if (int.parse(withdrawAmount.value.text) > user.balance) {
       setState(() {
         isError = true;
         isErrorMessage = 'Insufficient balance';
@@ -287,7 +291,7 @@ class BalancePageState extends State<BalancePage> {
                     borderSide: BorderSide(color: Colors.teal.shade300),
                   ),
                   helperText:
-                      "Max: \$${user.balance.toStringAsFixed(2)}, Min: \$$minimumWithdraw",
+                      "Max: \$${user.balance.toStringAsFixed(2)}, Min: \$${user.minWithdraw}",
                 ),
                 onChanged: (value) {
                   setState(() {

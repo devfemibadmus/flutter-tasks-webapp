@@ -298,14 +298,6 @@ class UserPageState extends State<UserPage> {
                       ),
                     ),
                   ),
-                  const SizedBox(height: 24),
-                  Text(
-                    "Earn \$0.03 per person referred",
-                    style: TextStyle(
-                      fontSize: 16,
-                      color: Colors.grey.shade600,
-                    ),
-                  ),
                 ] else ...[
                   Center(
                     child: Row(
@@ -328,6 +320,14 @@ class UserPageState extends State<UserPage> {
                     ),
                   ),
                 ],
+                const SizedBox(height: 24),
+                Text(
+                  "Earn \$${user.rearns} per person referred",
+                  style: TextStyle(
+                    fontSize: 16,
+                    color: Colors.grey.shade600,
+                  ),
+                ),
                 const SizedBox(height: 24),
                 Row(
                   children: [
