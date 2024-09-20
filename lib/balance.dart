@@ -46,7 +46,7 @@ class BalancePageState extends State<BalancePage> {
         isError = true;
         isErrorMessage = 'Please enter a valid acount number';
       });
-    } else if (accountName.isEmpty) {
+    } /*else if (accountName.isEmpty) {
       setState(() {
         isError = true;
         isErrorMessage = '404 account not found';
@@ -56,7 +56,8 @@ class BalancePageState extends State<BalancePage> {
         isError = true;
         isErrorMessage = 'Please hold while we verify account';
       });
-    } else if (withdrawAmount.value.text.isEmpty) {
+    } */
+    else if (withdrawAmount.value.text.isEmpty) {
       setState(() {
         isError = true;
         isErrorMessage = 'Please enter a valid amount to withdraw';
@@ -89,6 +90,7 @@ class BalancePageState extends State<BalancePage> {
   }
 
   Future<void> fetchUserName() async {
+    /*
     setState(() {
       isError = false;
       accountName = 'Loading...';
@@ -105,7 +107,7 @@ class BalancePageState extends State<BalancePage> {
         }
         accountName = userName;
       });
-    }
+    }*/
   }
 
   Future<void> _refreshBalance() async {
@@ -252,14 +254,15 @@ class BalancePageState extends State<BalancePage> {
                 cursorErrorColor: Colors.red,
                 cursorColor: Colors.grey.shade600,
                 decoration: InputDecoration(
-                  labelText: 'Account Number',
+                  // labelText: 'Account Number',
+                  labelText: 'Address/Email/ID',
                   labelStyle: TextStyle(color: Colors.grey.shade600),
                   border: const OutlineInputBorder(),
                   focusedBorder: OutlineInputBorder(
                     borderSide: BorderSide(color: Colors.teal.shade300),
                   ),
                 ),
-                keyboardType: TextInputType.number,
+                // keyboardType: TextInputType.number,
                 onChanged: (value) {
                   fetchUserName();
                 },

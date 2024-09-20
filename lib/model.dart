@@ -112,7 +112,7 @@ class Bank {
   factory Bank.fromJson(Map<String, dynamic> json) {
     return Bank(
       name: json['name'],
-      code: json['code'],
+      code: json['code'].toString(),
     );
   }
 }
@@ -398,4 +398,4 @@ Future<Map<String, dynamic>> getUserSignup(
   return json;
 }
 
-String baseUrl = html.window.location.origin;
+String baseUrl = 'http://127.0.0.1:8000';
