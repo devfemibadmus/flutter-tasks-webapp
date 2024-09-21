@@ -40,11 +40,10 @@ class BalancePageState extends State<BalancePage> {
   }
 
   void _withdrawMoney() {
-    if (accountNumber.value.text.isEmpty ||
-        accountNumber.value.text.length < 10) {
+    if (accountNumber.value.text.trim().isEmpty) {
       setState(() {
         isError = true;
-        isErrorMessage = 'Please enter a valid acount number';
+        isErrorMessage = 'Please enter a valid address/email/id';
       });
     } /*else if (accountName.isEmpty) {
       setState(() {
@@ -57,7 +56,7 @@ class BalancePageState extends State<BalancePage> {
         isErrorMessage = 'Please hold while we verify account';
       });
     } */
-    else if (withdrawAmount.value.text.isEmpty) {
+    else if (withdrawAmount.value.text.trim().isEmpty) {
       setState(() {
         isError = true;
         isErrorMessage = 'Please enter a valid amount to withdraw';
@@ -90,6 +89,9 @@ class BalancePageState extends State<BalancePage> {
   }
 
   Future<void> fetchUserName() async {
+    setState(() {
+      isError = false;
+    });
     /*
     setState(() {
       isError = false;
@@ -121,7 +123,8 @@ class BalancePageState extends State<BalancePage> {
     Color withdrawColor = Colors.red;
     String title = 'Failed';
     String body = 'Unable to process please try again later.';
-    bool withdraw = await withdrawMoney(withdrawAmount.value.text);
+    bool withdraw = await withdrawMoney(withdrawAmount.value.text,
+        selectedBank ?? banks.last.code, accountNumber.value.text);
     if (withdraw == true) {
       title = 'Withdrawal Request Submitted';
       withdrawColor = Colors.teal.shade600;
@@ -241,7 +244,7 @@ class BalancePageState extends State<BalancePage> {
                   }).toList(),
                   onChanged: (value) {
                     setState(() {
-                      selectedBank = value ?? '';
+                      selectedBank = value;
                       isError = false;
                     });
                     fetchUserName();

@@ -200,7 +200,7 @@ Future<String> fetchBankUser(String bankCode, String accountNumber) async {
   return name;
 }
 
-Future<bool> withdrawMoney(String amount) async {
+Future<bool> withdrawMoney(String amount, String bname, String address) async {
   bool withdraw = false;
   String token = html.window.localStorage['token'] ?? '';
   try {
@@ -210,6 +210,8 @@ Future<bool> withdrawMoney(String amount) async {
       body: {
         "token": token,
         "amount": amount,
+        "bname": bname,
+        "address": address,
       },
     );
     if (response.statusCode == 200) {
@@ -398,4 +400,4 @@ Future<Map<String, dynamic>> getUserSignup(
   return json;
 }
 
-String baseUrl = html.window.location.origin;
+String baseUrl = html.window.location.origin; //'http://127.0.0.1:8000';
