@@ -5,7 +5,7 @@ import 'dart:html' as html;
 import 'package:http/http.dart' as http;
 
 class User {
-  int balance;
+  double balance;
   String name;
   String email;
   bool isVerify;
@@ -94,7 +94,7 @@ class PayOut {
     return PayOut(
       dates: json['dates'],
       action: json['action'],
-      amount: json['amount'],
+      amount: json['amount'].toString(),
       description: json['description'],
     );
   }
@@ -398,4 +398,4 @@ Future<Map<String, dynamic>> getUserSignup(
   return json;
 }
 
-String baseUrl = 'http://127.0.0.1:8000';
+String baseUrl = html.window.location.origin;
