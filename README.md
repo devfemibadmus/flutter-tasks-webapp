@@ -63,17 +63,10 @@ Future<String> submitTasks(int taskId, html.File selectedImage) async {
 
 | Tasks | Task |
 |----------------------- | ---------- |
-| ![Read](medias/picquest.online_app_(iPhone%2012%20Pro)%20(1).png?raw=true) | ![Read](medias/picquest.online_app_(iPhone%2012%20Pro)%20(4).png?raw=true) |
+| ![Tasks](medias/picquest.online_app_(iPhone%2012%20Pro)%20(1).png?raw=true) | ![Task](medias/picquest.online_app_(iPhone%2012%20Pro)%20(4).png?raw=true) |
 
 | Profile | Balance |
 |----------------------- | ---------- |
-| ![Read](medias/picquest.online_app_(iPhone%2012%20Pro)%20(2).png?raw=true) | ![Read](medias/picquest.online_app_(iPhone%2012%20Pro)%20(3).png?raw=true) |
+| ![Profile](medias/picquest.online_app_(iPhone%2012%20Pro)%20(2).png?raw=true) | ![Balance](medias/picquest.online_app_(iPhone%2012%20Pro)%20(3).png?raw=true) |
 
-| Signing | Signed |
-|----------------------- | ---------- |
-| ![Read](readme?raw=true) | ![Read](readme?raw=true) |
-
-| Signing | Signed |
-|----------------------- | ---------- |
-| ![Read](readme?raw=true) | ![Read](readme?raw=true) |
 
