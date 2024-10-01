@@ -1,8 +1,6 @@
-# Picquest AI
+# Pic Quest
 
-## Overview
-
-Picquest AI is a task platform where users complete tasks by submitting images. It features a beautiful UI, easy navigation, and allows users to earn prizes. Task statuses include failed, pending, and passed. Users can view their balance, withdraw funds, and manage bank details. The platform is powered by a backend API available at [devfemibadmus/picquest](https://github.com/devfemibadmus/picquest).
+Pic Quest is a web task platform where users complete tasks by submitting images. It features a beautiful UI, easy navigation, and allows users to earn prizes. Task statuses include failed, pending, and passed. Users can view their balance, withdraw funds, and manage bank details. The platform is powered by a backend API available at [devfemibadmus/picquest](https://github.com/devfemibadmus/picquest)
 
 ## Features
 
